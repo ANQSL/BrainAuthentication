@@ -8,6 +8,7 @@
 #include "amplifier.h"
 #include "filestorage.h"
 #include "processdata.h"
+#include "datacommunicate.h"
 using namespace QtCharts;
 QT_BEGIN_NAMESPACE
 namespace Ui { class BCIMonitor; }
@@ -86,7 +87,7 @@ private:
     //解码状态
     bool decode_status=false;
 
-
+    DataCommunicate *datacommunicate=new DataCommunicate;
 
 
 };

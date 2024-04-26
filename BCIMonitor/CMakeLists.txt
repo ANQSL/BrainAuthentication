@@ -23,6 +23,7 @@ endif()
 add_subdirectory(FileStorage)
 add_subdirectory(Amplifier)
 add_subdirectory(curvegroup)
+add_subdirectory(DataCommunicate)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 file(GLOB SRC "src/*")
@@ -32,6 +33,6 @@ set(MonitorRes ${res} CACHE PATH "res of monitor")
 
 add_library(${PROJECT_NAME}  ${SRC} )
 
-target_link_libraries(BCIMonitor  FileStorage Amplifier curvegroup)
+target_link_libraries(BCIMonitor  FileStorage Amplifier curvegroup DataCommunicate)
 target_link_libraries(BCIMonitor  Qt5::Widgets)
 target_include_directories(BCIMonitor PUBLIC src)

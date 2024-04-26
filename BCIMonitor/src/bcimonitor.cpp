@@ -18,6 +18,7 @@ BCIMonitor::~BCIMonitor()
     delete filestorage;
     delete amplifier;
     delete processdata;
+    delete datacommunicate;
 }
 
 void BCIMonitor::connectAmplifier()
@@ -238,6 +239,7 @@ void BCIMonitor::setAmplifierConnect()
     connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),filestorage,SLOT(append_eeg(QList<double>)));
 //    降采样
     connect(amplifier,SIGNAL(readyRead(QList<double>)),processdata,SLOT(receiveData(QList<double>)));
+    connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),datacommunicate,SLOT(append(QList<double>)));
     //插件
     connect(amplifier,&Amplifier::loadPluginSucceed,this,[=](){
             emit setChannelNum(amplifier->getChannelName().size());
@@ -250,6 +252,8 @@ void BCIMonitor::setAmplifierConnect()
             processdata->setBreathIndex(amplifier->getBreathIndex());
             processdata->setHeartIndex(amplifier->getHeartIndex());
             setCurve();
+
+            datacommunicate->setSrate(amplifier->getSampleRate());
     });
     //采集器连接成功
     connect(amplifier,&Amplifier::connected,this,[=](){
