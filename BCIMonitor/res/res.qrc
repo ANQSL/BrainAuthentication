@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>IncreaseChannel.png</file>
+        <file>Increasescale.png</file>
+        <file>loading.gif</file>
+        <file>pause.png</file>
+        <file>ReduceChannel.png</file>
+        <file>Reducescale.png</file>
+        <file>start.png</file>
+        <file>stop.png</file>
+        <file>connect.png</file>
+        <file>last.png</file>
+        <file>next.png</file>
+        <file>ReduceChannel.png</file>
+        <file>plugin.png</file>
+        <file>decode.png</file>
+        <file>encode.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,6 @@
+*.exe
+.vs/
+build/
+CMakeLists.txt.*
+*.rar
+build*/

@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.10.0)
+project(bcimoniotr_test)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt5 COMPONENTS Widgets)
+## 添加资源
+file(COPY ${CURVE_RES} DESTINATION "res")
+## 添加解析文件脚本
+file(COPY ${RES_EXE} DESTINATION "file")
+## 添加mat库
+file(COPY ${MATDLL} DESTINATION ".")
+message("${MonitorRes}")
+add_executable(bcimoniotr_test WIN32  main.cpp ${MonitorRes} ${AmpliferRes})
+target_link_libraries(bcimoniotr_test BCIMonitor)

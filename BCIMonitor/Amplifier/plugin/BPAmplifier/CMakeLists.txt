@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(BPAmplifier LANGUAGES CXX)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(MSVC)
+    set(BPSDK "BPSDK")
+    set(BPInclude ${BPSDK}/Include)
+    if(CMAKE_CL_64)
+        file(GLOB BPBIT ${BPSDK}/Bin/x64/*.bit)
+        file(GLOB BPDLL ${BPSDK}/Bin/x64/*.dll)
+        file(GLOB BPLib ${BPSDK}/Bin/x64/*.lib)
+    else()
+        file(GLOB BPBIT ${BPSDK}/Bin/Win32/*.bit)
+        file(GLOB BPDLL ${BPSDK}/Bin/Win32/*.dll)
+        file(GLOB BPLib ${BPSDK}/Bin/Win32/*.lib)
+    endif()
+    set(BpBIT ${BPBIT} CACHE PATH "bit of bp")
+    set(BpDLL ${BPDLL} CACHE PATH "dll of bp")
+    include_directories(${BPInclude})
+endif()
+
+find_package(Qt5 COMPONENTS Core widgets REQUIRED)
+#add_subdirectory(test)
+#enable_testing()
+
+file(GLOB src "src/*")
+add_library(BPAmplifier  SHARED  ${src} res/res.qrc)
+#add_library(BPAmplifier    ${src} res/res.qrc)
+target_link_libraries(BPAmplifier PRIVATE Qt5::Core Qt5::Widgets ${BPLib})
+
+target_compile_definitions(BPAmplifier PRIVATE BPAMPLIFIER_LIBRARY)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${BPInclude})
+target_include_directories(${PROJECT_NAME} PUBLIC "src")
