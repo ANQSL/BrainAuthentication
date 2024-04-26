@@ -43,7 +43,7 @@ SSVEPConfig::SSVEPConfig()
     var=config.value("display_time");
     if(var.isNull())
     {
-        QVariant value=3000;
+        QVariant value=5000;
         config.setValue("display_time",value);
         this->display_time=value.toUInt();
     }
