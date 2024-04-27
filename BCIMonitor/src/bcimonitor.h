@@ -30,6 +30,8 @@ public slots:
     void appendMarkFireHit(QMap<QString,QString>);
     void appendMarkFireMiss(QMap<QString,QString>);
     void appendMarkCutHit(QMap<QString,QString>);
+    //
+    void appendMark(quint8);
 signals:
     void downData(QString);
     void saveFinished(QString);

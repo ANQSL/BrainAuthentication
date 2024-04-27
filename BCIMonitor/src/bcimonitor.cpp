@@ -93,6 +93,12 @@ void BCIMonitor::appendMarkCutHit(QMap<QString, QString> map)
        filestorage->appendEvent(EventType::CutHitErr);
     }
 }
+
+void BCIMonitor::appendMark(quint8 type)
+{
+    curvegroup->appendMark(QString(type));
+    filestorage->appendEvent(type);
+}
 void BCIMonitor::init()
 {
     initTool();
