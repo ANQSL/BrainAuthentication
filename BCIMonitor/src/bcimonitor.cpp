@@ -96,8 +96,10 @@ void BCIMonitor::appendMarkCutHit(QMap<QString, QString> map)
 
 void BCIMonitor::appendMark(quint8 type)
 {
+//    qDebug()<<"当前时间戳"<<QDateTime::currentMSecsSinceEpoch();
     curvegroup->appendMark(QString(type));
     filestorage->appendEvent(type);
+    emit markChanged(type);
 }
 void BCIMonitor::init()
 {
@@ -245,7 +247,9 @@ void BCIMonitor::setAmplifierConnect()
     connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),filestorage,SLOT(append_eeg(QList<double>)));
 //    降采样
     connect(amplifier,SIGNAL(readyRead(QList<double>)),processdata,SLOT(receiveData(QList<double>)));
+    connect(amplifier,&Amplifier::readyRead,this,&BCIMonitor::filterData);
     connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),datacommunicate,SLOT(append(QList<double>)));
+    connect(datacommunicate,&DataCommunicate::readMark,this,&BCIMonitor::appendMark);
     //插件
     connect(amplifier,&Amplifier::loadPluginSucceed,this,[=](){
             emit setChannelNum(amplifier->getChannelName().size());

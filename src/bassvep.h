@@ -2,7 +2,7 @@
 #define BASSVEP_H
 
 #include <QObject>
-#include "ssvep.h"
+#include "cca.h"
 #include "bcimonitor.h"
 class BASSVEP : public QObject
 {
@@ -12,8 +12,8 @@ public:
 
 signals:
 private:
-    SSVEP *ssvep;
-    void initSSVEP();
+    CCA *cca;
+    void initCCA();
     BCIMonitor *bcimonitor;
     void initBCIMonitor();
 };

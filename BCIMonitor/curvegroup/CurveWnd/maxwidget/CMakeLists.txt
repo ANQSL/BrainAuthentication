@@ -16,9 +16,9 @@ endif()
 find_package(Qt5 COMPONENTS Core widgets  printsupport REQUIRED)
 
 add_subdirectory(CurveProperty)
-add_subdirectory(test)
+#add_subdirectory(test)
 file(GLOB SRC ./src/*)
-add_library(maxwidget ${SRC} ${CurveProperty})
+add_library(maxwidget  ${SRC} ${CurveProperty})
 
 target_link_libraries(maxwidget  Qt5::Core Qt5::Widgets Qt5::PrintSupport CuvreProperty)
 target_include_directories(maxwidget PUBLIC  ./src)

@@ -1,10 +1,19 @@
 #include "cca.h"
 #include "_matrix.h"
 #include "string"
+#include "QDebug"
 #define PI acos(-1)
 CCA::CCA()
 {
+    current_data_num=0;
+    mark=0;
+    all_num=0;
+    valid_num=0;
+}
 
+void CCA::start(quint8 mark)
+{
+      this->mark=mark;
 }
 
 int CCA::Classify(double X[][mydatalength2], int channel_num)
@@ -57,6 +66,30 @@ int CCA::Classify(double X[][mydatalength2], int channel_num)
     delete []REF;
     REF=NULL;
     return max(result,REFNUM);
+}
+
+void CCA::append(QList<double> data)
+{
+    if(mark)
+    {
+        for(int i=0;i<32;i++)
+        {
+            this->data[i][current_data_num]=data[i];
+        }
+        current_data_num++;
+        if(current_data_num==mydatalength2)
+        {
+            int result=Classify(this->data,32);
+            qDebug()<<result;
+            current_data_num=0;
+            all_num++;
+            if(result==mark)
+            {
+                valid_num++;
+            }
+            mark=0;
+        }
+    }
 }
 /*
  * 输入参数：
@@ -115,14 +148,10 @@ double CCA::max(double * result,int n)
 
 void CCA::init()
 {
-    ref_rate[0]=5.454;
-    ref_rate[1]=6.667;
-    ref_rate[2]=7.5;
-    ref_rate[3]=8.5714;
-    ref_rate[4]=10;
-    ref_rate[5]=12;
-    ref_rate[6]=15;
-    ref_rate[7]=16;
+    ref_rate[0]=8;
+    ref_rate[1]=8.6;
+    ref_rate[2]=9;
+    ref_rate[3]=9.6;
     for(int i=0;i<REFNUM;i++)
     {
         for(int j=0;j<mydatalength2;j++)

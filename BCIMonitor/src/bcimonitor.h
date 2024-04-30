@@ -38,6 +38,10 @@ signals:
     //与存储模块的交互
     void setChannelNum(quint8);
     void setChanlocs(QVariantList);
+    //mark信息
+    void markChanged(quint8);
+    //滤波数据
+    void filterData(QList<double>);
 private slots:
     void connectAmplifier();
 private:

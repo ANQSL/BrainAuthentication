@@ -2,19 +2,20 @@
 
 BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
 {
-    initSSVEP();
+    initCCA();
     initBCIMonitor();
-    connect(ssvep,&SSVEP::markChanged,bcimonitor,&BCIMonitor::appendMark);
-    ssvep->show();
+    connect(bcimonitor,&BCIMonitor::markChanged,cca,&CCA::start);
+    connect(bcimonitor,&BCIMonitor::filterData,cca,&CCA::append);
     bcimonitor->show();
 }
 
 void BASSVEP::initBCIMonitor()
 {
     bcimonitor=new BCIMonitor;
+    bcimonitor->setFileMsg("lx",123);
 }
 
-void BASSVEP::initSSVEP()
+void BASSVEP::initCCA()
 {
-    ssvep=new SSVEP;
+    cca=new CCA;
 }

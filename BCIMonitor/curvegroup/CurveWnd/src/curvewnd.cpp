@@ -2,6 +2,7 @@
 void CurveWnd::initChartView()
 {
     chartview=new QCustomPlot(this);
+    chartview->setOpenGl(true);
     chartview->plotLayout()->setMargins(QMargins(width()*0.01,0,0,0));
     QColor color("#25262F");
     chartview->setBackground(color);

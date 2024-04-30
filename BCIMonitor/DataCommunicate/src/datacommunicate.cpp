@@ -82,15 +82,11 @@ void DataCommunicate::initCommunicate()
     communicate=new TcpCommunicate;
     connect(communicate,&TcpCommunicate::result,this,[=](quint8 value)
     {
-//        qDebug()<<send_status;
         send_status=value;
         if(send_status)
         {
             send_time=0;
         }
-//        if(send_status)
-//        {
-//            emit result(value);
-//        }
     });
+    connect(communicate,&TcpCommunicate::readMark,this,&DataCommunicate::readMark);
 }

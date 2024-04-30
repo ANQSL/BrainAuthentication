@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(ssvep LANGUAGES CXX)
+project(CCA LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -13,12 +13,11 @@ if(MSVC)
     add_compile_options("/source-charset:utf-8")
     add_compile_options("/execution-charset:utf-8")
 endif()
-find_package(Qt5 COMPONENTS Core Widgets network REQUIRED)
-add_subdirectory(test)
-File(GLOB src "src/*")
-add_library(ssvep ${src} )
+find_package(Qt5 COMPONENTS Core REQUIRED)
+file(GLOB src "src/*")
+add_library(CCA ${src})
 
-target_link_libraries(ssvep PRIVATE Qt5::Core Qt5::Widgets Qt5::Network)
+target_link_libraries(CCA PRIVATE Qt5::Core)
 
-target_compile_definitions(ssvep PRIVATE SSVEP_LIBRARY)
-target_include_directories(ssvep PUBLIC "src")
+target_compile_definitions(CCA PRIVATE SSVEP_LIBRARY)
+target_include_directories(CCA PUBLIC "src")
