@@ -1,0 +1,14 @@
+*.exe
+.vs/
+build/
+CMakeLists.txt.*
+*.rar
+build*/
+__pycache__/
+.idea/
+seed-stimulation/
+seed-stimulation-s/
+.vscode/
+DEAP.py
+demo.py
+*.pth
