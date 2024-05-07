@@ -13,6 +13,8 @@ if(MSVC)
     add_compile_options("/source-charset:utf-8")
     add_compile_options("/execution-charset:utf-8")
 endif()
+
+include_directories(../DataProcess/src)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 file(GLOB src "src/*")
 add_library(CCA ${src})

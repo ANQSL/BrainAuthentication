@@ -1,0 +1,3 @@
+[submodule "Calculate/identity_recognition"]
+	path = Calculate/identity_recognition
+	url = git@github.com:CUITCHENSIYU/identity_recognition.git

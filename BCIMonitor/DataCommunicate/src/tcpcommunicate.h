@@ -26,6 +26,9 @@ private:
     QTcpSocket *mark_socket=NULL;
     void setMarkSocketConnect();
 
+    //通信模式
+    bool model; //ture:服务器模式;false:客户端模式
+
 
 
 };

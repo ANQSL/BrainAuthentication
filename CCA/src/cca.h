@@ -3,6 +3,7 @@
 #define REFNUM 4
 #define mydatalength2 5000
 #include "QObject"
+#include "dataprocess.h"
 class CCA:public QObject
 {
     Q_OBJECT
@@ -24,6 +25,9 @@ private:
      quint8 mark;
      quint16  all_num;
      quint16  valid_num;
+
+     DataProcess::Filter filter;
+     void ssvepSave();
 };
 
 #endif // CCA_H

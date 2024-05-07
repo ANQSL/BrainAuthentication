@@ -34,6 +34,7 @@ class Communication(threading.Thread):
         self.channel_num = channel_num
         self.samplerate = samplerate
         self.time_seq = 5
+        self.data_len = 0.1
 
     def data_recv(self):
         global calculate_result, calculate_status, recv_data, recv_status
@@ -41,9 +42,9 @@ class Communication(threading.Thread):
             lock.acquire()
             try:
                 if self.recv_data is None:
-                    self.recv_data = self.data_client.recv(self.channel_num * 8 * self.samplerate)
+                    self.recv_data = self.data_client.recv(self.channel_num * 8 * self.samplerate * self.data_len)
                 else:
-                    data = self.data_client.recv(self.channel_num * 8 * self.samplerate)
+                    data = self.data_client.recv(self.channel_num * 8 * self.samplerate*self.data_len)
                     if not data:
                         self.data_client = None
                     self.recv_data = self.recv_data + data

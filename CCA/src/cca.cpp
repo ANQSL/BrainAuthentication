@@ -2,6 +2,7 @@
 #include "_matrix.h"
 #include "string"
 #include "QDebug"
+#include "QFile"
 #define PI acos(-1)
 CCA::CCA()
 {
@@ -9,6 +10,7 @@ CCA::CCA()
     mark=0;
     all_num=0;
     valid_num=0;
+    filter.init(32,1000,1,15);
 }
 
 void CCA::start(quint8 mark)
@@ -70,6 +72,10 @@ int CCA::Classify(double X[][mydatalength2], int channel_num)
 
 void CCA::append(QList<double> data)
 {
+    for(int i=0;i<data.size();i++)
+    {
+        data[i]=filter.iir(i,data[i]);
+    }
     if(mark)
     {
         for(int i=0;i<32;i++)
@@ -88,6 +94,7 @@ void CCA::append(QList<double> data)
                 valid_num++;
             }
             mark=0;
+            ssvepSave();
         }
     }
 }
@@ -144,6 +151,17 @@ double CCA::max(double * result,int n)
     {
         return right_max;
     }
+}
+
+void CCA::ssvepSave()
+{
+    QFile file("ssvep.bin");
+    file.open(QIODevice::WriteOnly);
+    for(int i=0;i<32;i++)
+    {
+        file.write((char*)data[i],mydatalength2*8);
+    }
+    file.close();
 }
 
 void CCA::init()

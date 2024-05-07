@@ -14,16 +14,33 @@ TcpCommunicate::~TcpCommunicate()
 
 void TcpCommunicate::start()
 {
-    server->listen(QHostAddress::Any,7777);
+    //开启数据服务
+    if(model)
+    {
+        server->listen(QHostAddress::Any,7777);
+    }
+    else
+    {
+        socket->connectToHost("127.0.0.1",7777);
+        socket->waitForConnected();
+    }
+    //开始mark服务
     mark_server->listen(QHostAddress::Any,8888);
 }
 
 void TcpCommunicate::stop()
 {    
-    server->close();
-    if(socket==NULL)
+    if(model)
     {
-        delete socket;
+        server->close();
+        if(socket==NULL)
+        {
+            delete socket;
+        }
+    }
+    else
+    {
+        socket->disconnect();
     }
     mark_server->close();
     if(socket==NULL)
@@ -40,16 +57,23 @@ void TcpCommunicate::send(double *data,quint16 data_len)
 }
 void TcpCommunicate::init()
 {
-    server=new QTcpServer;
-    connect(server,&QTcpServer::newConnection,this,[=](){
-        qDebug()<<"新连接";
-        if(server->hasPendingConnections())
-        {
-            socket=server->nextPendingConnection();
-            setSocketConnect();
-        }
-    });
-
+    if(model)
+    {
+        server=new QTcpServer;
+        connect(server,&QTcpServer::newConnection,this,[=](){
+            qDebug()<<"新连接";
+            if(server->hasPendingConnections())
+            {
+                socket=server->nextPendingConnection();
+                setSocketConnect();
+            }
+        });
+    }
+    else
+    {
+        socket=new QTcpSocket;
+        setSocketConnect();
+    }
     //标签端口
     mark_server=new QTcpServer;
     connect(mark_server,&QTcpServer::newConnection,this,[=](){
@@ -61,6 +85,7 @@ void TcpCommunicate::init()
              setMarkSocketConnect();
         }
     });
+
 }
 
 void TcpCommunicate::setSocketConnect()
@@ -73,7 +98,6 @@ void TcpCommunicate::setSocketConnect()
        QByteArray data=socket->readAll();
        quint8 result_value=data.toInt();
        emit result(result_value);
-
     });
 }
 
@@ -84,7 +108,6 @@ void TcpCommunicate::setMarkSocketConnect()
        for(int i=0;i<data.size();i++)
        {
            quint8 result_value=data[i];
-//           qDebug()<<result_value;
            emit readMark(result_value);
        }
 
