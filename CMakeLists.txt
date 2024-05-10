@@ -29,7 +29,6 @@ message("${MonitorRes}")
 file(GLOB SRC "src/*")
 
 add_executable(${PROJECT_NAME} WIN32 main.cpp ${SRC}  ${MonitorRes} ${AmpliferRes})
-
 target_link_libraries(${PROJECT_NAME}  BCIMonitor CCA DataProcess)
 target_link_libraries(${PROJECT_NAME}  Qt5::Widgets)
 target_include_directories(${PROJECT_NAME} PUBLIC src)

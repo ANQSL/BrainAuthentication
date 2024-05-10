@@ -7,11 +7,7 @@
 #define PI acos(-1)
 CCA::CCA()
 {
-    current_data_num=0;
-    mark=0;
-    all_num=0;
-    valid_num=0;
-    filter.init(32,1000,1,15);
+
 }
 
 void CCA::start(quint8 mark)
@@ -170,6 +166,14 @@ void CCA::ssvepSave()
 
 void CCA::init()
 {
+    //参数初始化
+    current_data_num=0;
+    mark=0;
+    all_num=0;
+    valid_num=0;
+    filter.init(32,1000,1,15);
+
+    //参考识别
     ref_rate[0]=8;
     ref_rate[1]=8.6;
     ref_rate[2]=9;
