@@ -61,6 +61,8 @@ private:
     quint32 eegdata_num;
     //脑电通道数
     quint8 channel_num;
+    //脑电采样率
+    quint16 srate;
     //心电数据头指针
     double *heart_head;
     //心电尾指针
@@ -78,6 +80,9 @@ private:
     int train_time;
     //是否连接游戏
     bool connect_game_status;
+
+    //保存模式，0：定时器保存，1：采样率保存，默认1
+    unsigned short int mode;
 signals:
     void storageSignal(double*,int num);
     void setNameSignal(QString);

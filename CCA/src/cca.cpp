@@ -3,6 +3,7 @@
 #include "string"
 #include "QDebug"
 #include "QFile"
+#include "QDateTime"
 #define PI acos(-1)
 CCA::CCA()
 {
@@ -93,8 +94,9 @@ void CCA::append(QList<double> data)
             {
                 valid_num++;
             }
-            mark=0;
             ssvepSave();
+            mark=0;
+
         }
     }
 }
@@ -155,7 +157,9 @@ double CCA::max(double * result,int n)
 
 void CCA::ssvepSave()
 {
-    QFile file("ssvep.bin");
+    QString path=QDateTime::currentDateTime().toString("yyyy_MM_dd")+"_"+QString::number(mark)+"_ssvep.bin";
+//    qDebug()<<path;
+    QFile file(path);
     file.open(QIODevice::WriteOnly);
     for(int i=0;i<32;i++)
     {

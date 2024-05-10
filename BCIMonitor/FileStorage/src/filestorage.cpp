@@ -62,7 +62,10 @@ void FileStorage::start()
     {
         if(stop_flag)
         {
-            timer->start();
+            if(mode==0)
+            {
+                timer->start();
+            }
             train_time++;
             QDir dir;
             QString save_path=this->user_dir+"/"+QString::number(train_time);
@@ -114,13 +117,15 @@ void FileStorage::pause()
 }
 void FileStorage::stop()
 {
-    timer->stop();
+    if(mode==0)
+    {
+        timer->stop();
+    }
     start_flag=false;
     stop_flag=true;
     save();
     storage->stop();
 }
-
 void FileStorage::setSampleNum(int value)
 {
 }
@@ -133,8 +138,8 @@ void FileStorage::setChannel_num(quint8 value)
 void FileStorage::setSrate(quint16 rate)
 {
     storage->setSrate(rate);
+    this->srate=rate;
 }
-
 void FileStorage::setChanlocs(QVariantList value)
 {
     storage->setChanlocs(value);
@@ -160,6 +165,10 @@ void FileStorage::append_eeg(QList<double> data)
     memcpy(eegdata_end,data.toVector().data(),data.size()*8);
     eegdata_num+=data.size()/channel_num;
     eegdata_end+=data.size();
+    if(eegdata_num==(srate*StorageConfig::getTime()))
+    {
+        save();
+    }
 
 }
 void FileStorage::creatFile()
@@ -185,7 +194,7 @@ void FileStorage::creatFile(QString name)
 
 void FileStorage::appendEvent(int type)
 {
-    storage->appendEvent(type,eegdata_num);
+    storage->appendEvent(type,storage->getPoint_num());
 }
 void FileStorage::init()
 {
@@ -194,6 +203,7 @@ void FileStorage::init()
     this->start_flag=false;
     this->pause_flag=false;
     this->stop_flag=true;
+    this->mode=1;
     storage=new MatStorage;
     initTimer();
     //初始化配置
