@@ -11,9 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
-include_directories(../../DataProcess/src)
 add_executable(CCA_test main.cpp)
 
-target_link_libraries(CCA_test PRIVATE Qt5::Core CCA DataProcess)
+target_link_libraries(CCA_test PRIVATE Qt5::Core CCA)
 
 target_compile_definitions(CCA_test PRIVATE DATAPROCESS_LIBRARY)
