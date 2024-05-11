@@ -29,6 +29,16 @@ void Filter::init(int channel_num,double fs,double cutoff_high, double cutoff_lo
     initW(4);    
     setCoefficient(coefficient,24);
 }
+
+QList<double> Filter::filter(QList<double> data)
+{
+    quint8 channel_num=data.size();
+    for(int i=0;i<channel_num;i++)
+    {
+        data[i]=iir(i,data[i]);
+    }
+    return data;
+}
 void Filter::initW(int order)
 {
     N_IIR=order/2;

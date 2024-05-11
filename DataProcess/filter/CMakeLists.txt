@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 3.10.0)
-project(Filter)
-include_directories(.)
-aux_source_directory(. src)
-add_library(Filter SHARED ${src})

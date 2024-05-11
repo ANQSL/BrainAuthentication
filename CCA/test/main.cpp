@@ -15,7 +15,7 @@ bool read_ssvep_data(QString path,double *data)
         QByteArray file_data =file.readAll();
         for(int i=0;i<32;i++)
         {
-            memcpy(data+5000*i,file_data.data()+5000*i*sizeof (8),sizeof (double)*5000);
+            memcpy(data+5000*i,file_data.data()+5000*i*sizeof (double),sizeof (double)*5000);
         }
         return true;
     }

@@ -135,7 +135,7 @@ int CCA::max(double * result,int n)
     int index=0;
     for(int i=0;i<n;i++)
     {
-        qDebug()<<result[i];
+//        qDebug()<<result[i];
         if(temp<result[i])
         {
             index=i;
@@ -175,8 +175,9 @@ void CCA::init()
         {
             for(int k=0;k<nharmonics;k++)
             {
-                REF[i][k*2][j]=sin(ref_rate[i]*2*(k+1)*PI*(double)j*1.0/1000);
-                REF[i][k*2+1][j]=cos(ref_rate[i]*2*(k+1)*PI*(double)j*1.0/1000);
+                double value=ref_rate[i]*2*(k+1)*PI*j*1.0/1000;
+                REF[i][k*2][j-1]=sin(value);
+                REF[i][k*2+1][j-1]=cos(value);
             }
         }
     }
