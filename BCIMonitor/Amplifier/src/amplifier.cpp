@@ -177,6 +177,18 @@ void Amplifier::clearFilter()
     datathread->clearFilter();
 }
 
+bool Amplifier::checkStatus()
+{
+    if(amplifierdevice==NULL)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 void Amplifier::loadPluginStatus(bool status)
 {
     if(status)

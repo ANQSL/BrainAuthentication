@@ -90,6 +90,7 @@ private:
     bool decode_status=false;
 
     DataCommunicate *datacommunicate=new DataCommunicate;
+    void setCommunicateConnect();
 
 
 };

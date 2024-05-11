@@ -115,6 +115,7 @@ void BCIMonitor::setConnect()
     setProcessDataConnect();
     setFileConnect();
     setAmplifierConnect();
+    setCommunicateConnect();
 }
 
 void BCIMonitor::initTool()
@@ -270,6 +271,30 @@ void BCIMonitor::setAmplifierConnect()
     connect(amplifier,&Amplifier::disconnected,this,[=](){
         enableSample(false);
         QMessageBox::about(this,"消息提示","设备断开");
+    });
+}
+
+void BCIMonitor::setCommunicateConnect()
+{
+    connect(datacommunicate,&DataCommunicate::commandSignal,this,[=](quint8 command){
+        if(amplifier->checkStatus())
+        {
+            if(command==1)
+            {
+//                qDebug()<<"解密";
+                decode_status=true;
+                toolButton[9]->setIcon(QIcon(":/encode.png"));
+                amplifier->setDecodeStatus(decode_status);
+
+            }
+            if(command==2)
+            {
+//                qDebug()<<"不解密";
+                decode_status=false;
+                amplifier->setDecodeStatus(decode_status);
+                toolButton[9]->setIcon(QIcon(":/decode.png"));
+            }
+        }
     });
 }
 

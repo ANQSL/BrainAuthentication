@@ -14,9 +14,16 @@ public:
     void send(double *data,quint16 data_len);
 signals:
     void result(quint8);
+    void commandSignal(quint8);
 private:
     QTcpServer *server;
     QTcpSocket *socket=NULL;
+
+    QTcpServer *command_server=NULL;
+    QTcpSocket *command_socket=NULL;
+
+    void initCommand();
+    void setCommandConnect();
     void init();
     void setSocketConnect();
 

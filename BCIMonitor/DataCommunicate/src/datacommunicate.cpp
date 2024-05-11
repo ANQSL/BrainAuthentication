@@ -93,4 +93,5 @@ void DataCommunicate::initCommunicate()
 //            emit result(value);
 //        }
     });
+    connect(communicate,&TcpCommunicate::commandSignal,this,&DataCommunicate::commandSignal);
 }

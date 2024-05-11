@@ -32,6 +32,7 @@ public:
     void showPluginWidget();
     void setDecodeStatus(bool);
     void clearFilter();
+    bool checkStatus();//检查放大器是否加载
 private slots:
     void loadPluginStatus(bool);
 
