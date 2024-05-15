@@ -13,6 +13,8 @@ CCA::CCA()
 void CCA::start(quint8 mark)
 {
       this->mark=mark;
+      all_num=0;
+      valid_num=0;
 }
 
 int CCA::Classify(double X[][mydatalength2], int channel_num)
@@ -78,17 +80,16 @@ void CCA::append(QList<double> data)
         current_data_num++;
         if(current_data_num==mydatalength2)
         {
-            int result=Classify(this->data,32);
-            qDebug()<<result;
+            quint8 result_value=Classify(this->data,32);
             current_data_num=0;
             all_num++;
-            if(result==mark)
+            if(result_value==mark)
             {
                 valid_num++;
             }
             ssvepSave();
             mark=0;
-
+            emit result(result_value);
         }
     }
 }

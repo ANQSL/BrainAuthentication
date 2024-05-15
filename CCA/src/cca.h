@@ -14,6 +14,8 @@ public:
     void start(quint8);
     int Classify(double X[][mydatalength2],int channel_num);
     void append(QList<double>);
+signals:
+    void result(quint8);
 private:
      void init();
      double REF[REFNUM][nharmonics*2][mydatalength2];

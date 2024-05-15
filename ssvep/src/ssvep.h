@@ -20,6 +20,7 @@ private:
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void drawArrows(QPainter &painter,int x,int y,QColor,Direction );
+    void print(QString);
     SSVEPConfig config;
     QList<QList<quint8>> gray_weight;
     void initWidget();

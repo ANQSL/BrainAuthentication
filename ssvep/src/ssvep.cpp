@@ -4,13 +4,14 @@
 #include "math.h"
 #include "QPainter"
 #include "QKeyEvent"
-#include "QDebug"
 #include "QRandomGenerator"
 #include "QTime"
 #include "timerevent.h"
+#include "iostream"
 #define PI acos(-1)
 SSVEP::SSVEP()
 {
+    this->setWindowFlags(Qt::FramelessWindowHint);
     initGrayWeight();
     initTimer();
     initMarks();
@@ -36,7 +37,7 @@ void SSVEP::paintEvent(QPaintEvent *event)
        else
        {
            timer->stop();
-           qDebug()<<"开销时间为："<<QDateTime::currentMSecsSinceEpoch()-start_time;
+           print("开销时间为："+QString::number(QDateTime::currentMSecsSinceEpoch()-start_time));
            current_frame=0;
            type=false;
            current_task_num++;
@@ -56,11 +57,11 @@ void SSVEP::keyPressEvent(QKeyEvent *event)
 {
     communication->connectAmplifier();
     type=true;
-    qDebug()<<"第"<<current_task_num+1<<"次任务";
+    print("第"+QString::number(current_task_num+1)+"次任务");
     if(mode)
     {
        initFrames(marks[current_task_num]);
-       qDebug()<<"当前频率："<<config.filckerFrep[marks[current_task_num]].toFloat();
+       print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
        emit markChanged(marks[current_task_num]+1);
     }
     start_time=QDateTime::currentMSecsSinceEpoch();
@@ -136,6 +137,13 @@ void SSVEP::drawArrows(QPainter &painter,int x, int y, QColor color,Direction m_
     painter.setBrush(color);
     painter.drawPath(path);
     painter.fillPath(path, color);
+}
+
+void SSVEP::print(QString msg)
+{
+    std::string data=msg.toStdString();
+    std::cout<<data;
+    std::cout.flush();
 }
 
 void SSVEP::initWidget()
@@ -304,7 +312,6 @@ void SSVEP::initFrames(quint8 type)
         pixmap.fill(Qt::black);
         QPainter painter(&pixmap);
         display(painter,i,type);
-        pixmap.save(QString("%1.jpg").arg(i+1));
         frames.append(pixmap);
     }
 }

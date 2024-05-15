@@ -9,7 +9,16 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
         data=filter->filter(data);
         cca->append(data);
     });
-    bcimonitor->show();
+    connect(cca,&CCA::result,controlfly,&ControlFly::command);
+            bcimonitor->show();
+}
+
+BASSVEP::~BASSVEP()
+{
+    delete bcimonitor;
+    delete cca;
+    delete filter;
+    delete controlfly;
 }
 
 void BASSVEP::initFilter()
@@ -23,7 +32,6 @@ void BASSVEP::initBCIMonitor()
     bcimonitor=new BCIMonitor;
     bcimonitor->setFileMsg("lx",123);
 }
-
 void BASSVEP::initCCA()
 {
     cca=new CCA;
