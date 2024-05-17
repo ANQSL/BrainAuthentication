@@ -9,6 +9,7 @@
 #include "filestorage.h"
 #include "processdata.h"
 #include "datacommunicate.h"
+#include "monitortoolbar.h"
 using namespace QtCharts;
 QT_BEGIN_NAMESPACE
 namespace Ui { class BCIMonitor; }
@@ -19,6 +20,8 @@ class BCIMonitor : public QMainWindow
 public:
     BCIMonitor(QWidget *parent = nullptr);
     ~BCIMonitor();
+    //开始传输数据
+    void startDataTransmit();
 public slots:
     //存储
     void setFileMsg(QString,int);
@@ -61,11 +64,9 @@ private:
     void init();
     void setConnect();
     //工具栏
-    QToolBar *toolbar;
-    QList<QAction *> toolButton;
+    MonitorToolBar *toolbar;
     void initTool();
     void setToolConnet();
-    void enableSample(bool);
 
     //状态栏
     QStatusBar *statusbar;

@@ -2,6 +2,7 @@
 #include "QTcpSocket"
 TcpCommunicate::TcpCommunicate(QObject *parent) : QObject(parent)
 {
+    model=false;
     init();
 }
 
@@ -95,12 +96,12 @@ void TcpCommunicate::setSocketConnect()
 //       socket=NULL;
 //    });
     connect(socket,&QTcpSocket::readyRead,this,[=](){
-       QByteArray data=socket->readAll();
-       quint8 result_value=data.toInt();
+       QByteArray data=socket->read(1);
+       qDebug()<<data.toInt();
+       int result_value=data[0];
        emit result(result_value);
     });
 }
-
 void TcpCommunicate::setMarkSocketConnect()
 {
     connect(mark_socket,&QTcpSocket::readyRead,this,[=](){

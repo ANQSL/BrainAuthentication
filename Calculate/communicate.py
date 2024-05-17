@@ -34,7 +34,7 @@ class Communication(threading.Thread):
         self.channel_num = channel_num
         self.samplerate = samplerate
         self.time_seq = 5
-        self.data_len = 0.1
+        self.data_len = 1
 
     def data_recv(self):
         global calculate_result, calculate_status, recv_data, recv_status
@@ -42,9 +42,9 @@ class Communication(threading.Thread):
             lock.acquire()
             try:
                 if self.recv_data is None:
-                    self.recv_data = self.data_client.recv(self.channel_num * 8 * self.samplerate * self.data_len)
+                    self.recv_data = self.data_client.recv(self.channel_num * 8 * self.samplerate)
                 else:
-                    data = self.data_client.recv(self.channel_num * 8 * self.samplerate*self.data_len)
+                    data = self.data_client.recv(self.channel_num * 8 * self.samplerate)
                     if not data:
                         self.data_client = None
                     self.recv_data = self.recv_data + data
@@ -60,7 +60,7 @@ class Communication(threading.Thread):
                     self.data_client = None
                 if e.errno == 10053:
                     self.data_client = None
-                print(e)
+                # print(e)
             lock.release()
         else:
             try:
@@ -74,12 +74,20 @@ class Communication(threading.Thread):
                 print("没有连接")
 
     def back_result(self):
-        global calculate_result, calculate_status
+        global calculate_result, calculate_status, recv_data
         if calculate_status:
             if self.data_client is not None:
-                result = calculate_result.astype(np.int64).tobytes()
-                self.data_client.send(result)
-                print("计算结果：{}".format(calculate_result))
+                try:
+                    result = struct.pack('i', calculate_result)
+                    print(result)
+                    self.data_client.send(result)
+                    print("计算结果：{}".format(calculate_result))
+                    # 用于一次性识别中需要去除之前的数据,例如身份识别，而像认知任务着不需要
+                    lock.locked()
+                    recv_data = None
+                    lock.release()
+                except Exception as e:
+                    print(e)
             calculate_status = False
 
     def command_recv(self):

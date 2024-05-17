@@ -49,6 +49,11 @@ void ControlFly::setSocketConnect()
     connect(socket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(socketDeal(QAbstractSocket::SocketError)));
 }
 
+void ControlFly::initTaskProcess()
+{
+    task_process=new QProcess;
+}
+
 void ControlFly::socketDeal(QAbstractSocket::SocketError socketError)
 {
     socket=NULL;

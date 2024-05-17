@@ -21,6 +21,10 @@ BCIMonitor::~BCIMonitor()
     delete datacommunicate;
 }
 
+void BCIMonitor::startDataTransmit()
+{
+    datacommunicate->start();
+}
 void BCIMonitor::connectAmplifier()
 {
     QWidget *connectwidget=amplifier->getConnectWidget();
@@ -121,57 +125,29 @@ void BCIMonitor::setConnect()
 
 void BCIMonitor::initTool()
 {
-   toolbar=new QToolBar();
+   toolbar=new MonitorToolBar;
    this->addToolBar(toolbar);
-   toolbar->addAction(QIcon(":/start.png"),"");
-   toolbar->addAction(QIcon(":/pause.png"),"");
-   toolbar->addAction(QIcon(":/stop.png"),"");
-   toolbar->addAction(QIcon(":/last.png"),"");
-   toolbar->addAction(QIcon(":/next.png"),"");
-   toolbar->addAction(QIcon(":/IncreaseChannel.png"),"");
-   toolbar->addAction(QIcon(":/ReduceChannel.png"),"");
-   toolbar->addAction(QIcon(":/Increasescale.png"),"");
-   toolbar->addAction(QIcon(":/Reducescale.png"),"");
-   toolbar->addAction(QIcon(":/decode.png"),"");
-   toolbar->addAction(QIcon(":/connect.png"),"");
-   toolbar->addAction(QIcon(":/plugin.png"),"");
-   toolButton=toolbar->actions();
-   enableSample(false);
 }
 
 void BCIMonitor::setToolConnet()
 {
-    connect(toolButton[0],&QAction::triggered,filestorage,&FileStorage::start);
-    connect(toolButton[1],&QAction::triggered,filestorage,&FileStorage::pause);
-    connect(toolButton[2],&QAction::triggered,filestorage,&FileStorage::stop);
+    connect(toolbar,&MonitorToolBar::startSignal,filestorage,&FileStorage::start);
+    connect(toolbar,&MonitorToolBar::pauseSignal,filestorage,&FileStorage::pause);
+    connect(toolbar,&MonitorToolBar::stopSignal,filestorage,&FileStorage::stop);
 
-    connect(toolButton[0],&QAction::triggered,amplifier,&Amplifier::start);
-    connect(toolButton[1],&QAction::triggered,amplifier,&Amplifier::pause);
-    connect(toolButton[2],&QAction::triggered,amplifier,&Amplifier::stop);
-    connect(toolButton[10],&QAction::triggered,this,&BCIMonitor::connectAmplifier);
-    connect(toolButton[9],&QAction::triggered,this,[=](){
-        if(decode_status)
-        {
-            decode_status=!decode_status;
+    connect(toolbar,&MonitorToolBar::monitorSignal,amplifier,&Amplifier::start);
+    connect(toolbar,&MonitorToolBar::stopmonitorSignal,amplifier,&Amplifier::stop);
+    connect(toolbar,&MonitorToolBar::connectSignal,this,&BCIMonitor::connectAmplifier);
+    connect(toolbar,&MonitorToolBar::encodeSignal,this,[=](){
+            decode_status=false;
             amplifier->setDecodeStatus(decode_status);
-            toolButton[9]->setIcon(QIcon(":/decode.png"));
-        }
-        else {
-            decode_status=!decode_status;
-            amplifier->setDecodeStatus(decode_status);
-            toolButton[9]->setIcon(QIcon(":/encode.png"));
-        }
     });
-    connect(toolButton[11],&QAction::triggered,amplifier,&Amplifier::showPluginWidget);
+    connect(toolbar,&MonitorToolBar::decodeSignal,this,[=](){
+            decode_status=true;
+            amplifier->setDecodeStatus(decode_status);
+    });
+    connect(toolbar,&MonitorToolBar::pluginSignal,amplifier,&Amplifier::showPluginWidget);
 }
-void BCIMonitor::enableSample(bool enable)
-{
-    for(int i=0;i<10;i++)
-    {
-        toolButton[i]->setEnabled(enable);
-    }
-}
-
 void BCIMonitor::initStatus()
 {
     statusbar=new QStatusBar;
@@ -213,12 +189,12 @@ void BCIMonitor::setCurve()
 
 void BCIMonitor::setCurveConnect()
 {
-    connect(toolButton[3],&QAction::triggered,curvegroup,&CurveGroup::last);
-    connect(toolButton[4],&QAction::triggered,curvegroup,&CurveGroup::next);
-    connect(toolButton[5],&QAction::triggered,curvegroup,&CurveGroup::increaseGroupChannel);
-    connect(toolButton[6],&QAction::triggered,curvegroup,&CurveGroup::reduceGroupChannel);
-    connect(toolButton[7],&QAction::triggered,curvegroup,&CurveGroup::increaseScale);
-    connect(toolButton[8],&QAction::triggered,curvegroup,&CurveGroup::reduceScale);
+    connect(toolbar,&MonitorToolBar::lastSignal,curvegroup,&CurveGroup::last);
+    connect(toolbar,&MonitorToolBar::nextSignal,curvegroup,&CurveGroup::next);
+    connect(toolbar,&MonitorToolBar::increaseChannelSignal,curvegroup,&CurveGroup::increaseGroupChannel);
+    connect(toolbar,&MonitorToolBar::ReduceChannelSignal,curvegroup,&CurveGroup::reduceGroupChannel);
+    connect(toolbar,&MonitorToolBar::increasescaleSignal,curvegroup,&CurveGroup::increaseScale);
+    connect(toolbar,&MonitorToolBar::ReducescaleSignal,curvegroup,&CurveGroup::reduceScale);
     connect(amplifier,SIGNAL(readyRead(QList<double>)),curvegroup,SLOT(append(QList<double>)));
 }
 void BCIMonitor::initFileStorage()
@@ -268,11 +244,11 @@ void BCIMonitor::setAmplifierConnect()
     //采集器连接成功
     connect(amplifier,&Amplifier::connected,this,[=](){
         amplifier->getConnectWidget()->hide();
-        enableSample(true);
+        toolbar->enableAction();
 //        setCurve();
     });
     connect(amplifier,&Amplifier::disconnected,this,[=](){
-        enableSample(false);
+        toolbar->disabledAction();
         QMessageBox::about(this,"消息提示","设备断开");
     });
 }

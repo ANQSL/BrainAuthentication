@@ -6,6 +6,10 @@
 #include "bcimonitor.h"
 #include "dataprocess.h"
 #include "controlfly.h"
+#include "ssvepwidget.h"
+#include "custommessagehandler.h"
+#include "indexwidget.h"
+#include "start_game.h"
 class BASSVEP : public QObject
 {
     Q_OBJECT
@@ -25,6 +29,17 @@ private:
     void initBCIMonitor();
     //控制
     ControlFly *controlfly;
+    void initControlFly();
+    //ssvepwidget
+    SSVEPWidget *ssvep_widget;
+    void initSSVEPWidget();
+
+    //主页
+    IndexWidget *indexwidget;
+    void initIndexWidget();
+    //任务
+    start_game  *taskwidget;
+    void initTaskWidget();
 
 
 };

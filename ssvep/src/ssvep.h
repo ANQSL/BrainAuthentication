@@ -7,6 +7,7 @@
 #include "QOpenGLWidget"
 #include "timer.h"
 #include "communication.h"
+#include "QSocketNotifier"
 class SSVEP:public QOpenGLWidget
 {
     Q_OBJECT
@@ -45,6 +46,11 @@ private:
     QVector<QPixmap> frames;
     void initFrames(quint8 type);
     void initFrames();
+
+    void start_display(int mode);
+
+    //进程通信
+    void readInput();
 
 };
 

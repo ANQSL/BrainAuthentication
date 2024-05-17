@@ -41,17 +41,23 @@ void DataCommunicate::append(QList<double> data)
         memcpy(current_point,data.toVector().data(),data_byte_size);
         current_point+=data.size();
         buffer_data_size++;
-
-        if((srate*0.1)==buffer_data_size)
+        if(srate==buffer_data_size)
         {
-            char point[8]={char(0xFF),char(0xFF),char(0xFF),char(0xFF)
-                          ,char(0xFF),char(0xFF),char(0xFF),char(0xFF)};
-            memcpy(current_point,point,8);
-            communicate->send(buffer,buffer_data_size*data.size()+1);
+            communicate->send(buffer,buffer_data_size*data.size());
             clear();
             this->send_time++;
             qDebug()<<"发送次数:"<<send_time;
         }
+//        if((srate*0.1)==buffer_data_size)
+//        {
+//            char point[8]={char(0xFF),char(0xFF),char(0xFF),char(0xFF)
+//                          ,char(0xFF),char(0xFF),char(0xFF),char(0xFF)};
+//            memcpy(current_point,point,8);
+//            communicate->send(buffer,buffer_data_size*data.size()+1);
+//            clear();
+//            this->send_time++;
+//            qDebug()<<"发送次数:"<<send_time;
+//        }
     }
     else
     {
@@ -80,13 +86,11 @@ void DataCommunicate::disconnection()
 void DataCommunicate::initCommunicate()
 {
     communicate=new TcpCommunicate;
-    connect(communicate,&TcpCommunicate::result,this,[=](quint8 value)
+    connect(communicate,&TcpCommunicate::result,this,[=](int value)
     {
-        send_status=value;
-        if(send_status)
-        {
-            send_time=0;
-        }
+        qDebug()<<value;
+        send_status=!send_status;
+        send_time=0;
     });
     connect(communicate,&TcpCommunicate::readMark,this,&DataCommunicate::readMark);
 }

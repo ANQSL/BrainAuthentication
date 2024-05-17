@@ -8,10 +8,12 @@
 #include "QTime"
 #include "timerevent.h"
 #include "iostream"
+#include "QtConcurrent/QtConcurrent"
 #define PI acos(-1)
 SSVEP::SSVEP()
 {
-    this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::Tool|Qt::FramelessWindowHint);
+    QtConcurrent::run(this, &SSVEP::readInput);
     initGrayWeight();
     initTimer();
     initMarks();
@@ -319,4 +321,47 @@ void SSVEP::initFrames(quint8 type)
 void SSVEP::initFrames()
 {
 
+}
+void SSVEP::start_display(int mode)
+{
+    communication->connectAmplifier();
+    type=true;
+    print("第"+QString::number(current_task_num+1)+"次任务");
+    if(mode)
+    {
+       initFrames(marks[current_task_num]);
+       print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
+       emit markChanged(marks[current_task_num]+1);
+    }
+    start_time=QDateTime::currentMSecsSinceEpoch();
+    timer->start(16);
+}
+
+void SSVEP::readInput()
+{
+     bool ok = true;
+     char chBuf[4096];
+     DWORD dwRead;
+     HANDLE hStdinDup;
+
+     const HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+     if (hStdin == INVALID_HANDLE_VALUE)
+         return;
+
+     DuplicateHandle(GetCurrentProcess(), hStdin,
+                     GetCurrentProcess(), &hStdinDup,
+                     0, false, DUPLICATE_SAME_ACCESS);
+
+     CloseHandle(hStdin);
+     while (ok) {
+         ok = ReadFile(hStdinDup, chBuf, sizeof(chBuf), &dwRead, NULL);
+         // emit sig_log(QLatin1String("ok is:")+QString::number(ok));
+         if (ok && dwRead != 0)
+         {
+              if(chBuf[0]==0)
+              {
+                  start_display(1);
+              }
+         }
+     }
 }

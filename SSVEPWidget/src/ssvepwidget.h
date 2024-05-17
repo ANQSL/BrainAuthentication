@@ -10,6 +10,8 @@ class SSVEPWidget : public QWidget
 public:
     explicit SSVEPWidget(QWidget *parent = nullptr);
     ~SSVEPWidget();
+    void start();
+    void stop();
     void send(QByteArray);
 private slots:
     void recevice();
@@ -24,6 +26,7 @@ private:
     void initProcess();
     static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
     HWND findWindowById(DWORD);
+    void keyPressEvent(QKeyEvent *event)override;
 };
 
 #endif // SSVEPWIDGET_H

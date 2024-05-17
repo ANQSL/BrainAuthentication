@@ -1,6 +1,7 @@
 #include "ssvepwidget.h"
 #include "QTimer"
 #include "QDebug"
+#include "QKeyEvent"
 SSVEPWidget::SSVEPWidget(QWidget *parent) : QWidget(parent)
 {
     initProcess();
@@ -8,9 +9,34 @@ SSVEPWidget::SSVEPWidget(QWidget *parent) : QWidget(parent)
 
 SSVEPWidget::~SSVEPWidget()
 {
-    ssvep_process->kill();
-    ssvep_process->waitForFinished();
+    if(ssvep_process->state()!=QProcess::NotRunning)
+    {
+        ssvep_process->kill();
+        ssvep_process->waitForFinished();
+    }
     delete ssvep_process;
+}
+
+void SSVEPWidget::start()
+{
+    ssvep_process->start("D:/project/BrainAuthentication/build-ssvep-Desktop_Qt_5_14_2_MSVC2017_32bit-Debug/test/ssvep_test.exe");
+//    QTimer::singleShot(1000, this, [=](){
+//        DWORD pid = ssvep_process->processId();
+//        HWND hwnd = findWindowById(pid);
+//        if (hwnd) {
+//            SetParent(hwnd, (HWND)this->winId());
+//            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_POPUP | WS_CHILD);
+//            SetWindowPos(hwnd, HWND_TOP, 0, 0, width(),height(), SWP_SHOWWINDOW);
+//        } else {
+//           qDebug() << "Failed to find window for PID:" << pid;
+//        }
+//    });
+    connect(ssvep_process,&QProcess::readyReadStandardOutput,this,&SSVEPWidget::recevice);
+}
+
+void SSVEPWidget::stop()
+{
+    ssvep_process->kill();
 }
 
 void SSVEPWidget::send(QByteArray data)
@@ -39,21 +65,7 @@ void SSVEPWidget::recevice()
 }
 void SSVEPWidget::initProcess()
 {
-    ssvep_process=new QProcess;
-    ssvep_process->start("D:/project/BrainAuthentication/build-ssvep-Desktop_Qt_5_14_2_MSVC2017_32bit-Debug/test/ssvep_test.exe");
-    QTimer::singleShot(1000, this, [=](){
-        DWORD pid = ssvep_process->processId();
-        HWND hwnd = findWindowById(pid);
-        if (hwnd) {
-            SetParent(hwnd, (HWND)this->winId());
-            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_POPUP | WS_CHILD);
-            SetWindowPos(hwnd, HWND_TOP, 0, 0, width(),height(), SWP_SHOWWINDOW);
-        } else {
-           qDebug() << "Failed to find window for PID:" << pid;
-        }
-    });
-    connect(ssvep_process,&QProcess::readyReadStandardOutput,this,&SSVEPWidget::recevice);
-
+    ssvep_process=new QProcess(this);
 }
 
 BOOL SSVEPWidget::EnumWindowsProc(HWND hwnd, LPARAM lParam)
@@ -75,4 +87,13 @@ HWND SSVEPWidget::findWindowById(DWORD pid)
     data.hwnd = NULL;
     EnumWindows(EnumWindowsProc, (LPARAM)&data);
     return data.hwnd;
+}
+
+void SSVEPWidget::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_Space)
+    {
+        char data=0;
+        ssvep_process->write(&data,1);
+    }
 }

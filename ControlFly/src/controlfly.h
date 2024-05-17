@@ -4,6 +4,7 @@
 #include <QObject>
 #include "QTcpServer"
 #include "QTcpSocket"
+#include "QProcess"
 class ControlFly : public QObject
 {
     Q_OBJECT
@@ -18,6 +19,9 @@ private:
     QTcpSocket *socket=NULL;
     void setConnect();
     void setSocketConnect();
+    //任务进程
+    QProcess *task_process;
+    void initTaskProcess();
 private slots:
     void socketDeal(QAbstractSocket::SocketError socketError);
 };

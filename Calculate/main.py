@@ -1,11 +1,11 @@
 import sys
 
+sys.path.append("D:\\project\\BrainAuthentication\\Calculate\\identity_recognition")
 from calculate import Calculate
 from communicate import Communication
-sys.path.append("D:/project/BrainAuthentication/Calculate/identity_recognition")
-if __name__ == "__main__":
 
-    communicate = Communication(32, 250)
+if __name__ == "__main__":
+    communicate = Communication(32, 1000)
     calculate = Calculate()
     communicate.start()
     calculate.start()

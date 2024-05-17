@@ -4,6 +4,6 @@ int main(int args,char* *argv)
 {
     QApplication app(args,argv);
     SSVEPWidget ssvepwidget;
-    ssvepwidget.show();
+//    ssvepwidget.show();
     return app.exec();
 }
