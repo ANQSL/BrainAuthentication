@@ -33,5 +33,4 @@ void Communication::connectAmplifier()
         }
         std::cout.flush();
     }
-
 }

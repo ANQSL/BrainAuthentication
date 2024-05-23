@@ -88,9 +88,9 @@ void DataCommunicate::initCommunicate()
     communicate=new TcpCommunicate;
     connect(communicate,&TcpCommunicate::result,this,[=](int value)
     {
-        qDebug()<<value;
         send_status=!send_status;
         send_time=0;
+        emit result(value);
     });
     connect(communicate,&TcpCommunicate::readMark,this,&DataCommunicate::readMark);
 }

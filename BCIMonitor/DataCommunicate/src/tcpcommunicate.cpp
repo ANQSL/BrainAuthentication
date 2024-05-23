@@ -9,7 +9,10 @@ TcpCommunicate::TcpCommunicate(QObject *parent) : QObject(parent)
 TcpCommunicate::~TcpCommunicate()
 {
     stop();
-    delete  server;
+    if(model)
+    {
+       delete  server;
+    }
     delete  mark_server;
 }
 
@@ -97,7 +100,7 @@ void TcpCommunicate::setSocketConnect()
 //    });
     connect(socket,&QTcpSocket::readyRead,this,[=](){
        QByteArray data=socket->read(1);
-       qDebug()<<data.toInt();
+//       qDebug()<<data.toInt();
        int result_value=data[0];
        emit result(result_value);
     });

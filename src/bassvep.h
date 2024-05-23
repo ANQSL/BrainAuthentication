@@ -10,6 +10,7 @@
 #include "custommessagehandler.h"
 #include "indexwidget.h"
 #include "start_game.h"
+#include "calculatetest.h"
 class BASSVEP : public QObject
 {
     Q_OBJECT
@@ -40,6 +41,10 @@ private:
     //任务
     start_game  *taskwidget;
     void initTaskWidget();
+
+
+    //算法验证
+    CalculateTest calculate_test;
 
 
 };

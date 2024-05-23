@@ -10,15 +10,18 @@ CCA::CCA()
     init();
 }
 
-void CCA::start(quint8 mark)
-{
-      this->mark=mark;
-      all_num=0;
-      valid_num=0;
-}
+//void CCA::start(quint8 mark)
+//{
+//      this->mark=mark;
+//      all_num=0;
+//      valid_num=0;
+//}
 
 int CCA::Classify(double X[][mydatalength2], int channel_num)
 {
+#if Channel_Select_Status
+    channel_num=select_channel.size();
+#endif
     //为数据开辟临时空间
     double **data=new double*[channel_num];
     for(int i=0;i<channel_num;i++)
@@ -35,10 +38,17 @@ int CCA::Classify(double X[][mydatalength2], int channel_num)
     for(int i=0;i<REFNUM;i++)
     {
         //复制数据
+#if Channel_Select_Status
+        for(int j=0;j<channel_num;j++)
+        {
+            memcpy(data[j],X[select_channel[i]],sizeof (double)*mydatalength2);
+        }
+#else
         for(int j=0;j<channel_num;j++)
         {
             memcpy(data[j],X[j],sizeof (double)*mydatalength2);
         }
+#endif
         //复制参考
         for(int j=0;j<nharmonics*2;j++)
         {
@@ -81,7 +91,6 @@ void CCA::append(QList<double> data)
         if(current_data_num==mydatalength2)
         {
             quint8 result_value=Classify(this->data,32);
-            qDebug()<<result_value;
             current_data_num=0;
             all_num++;
             if(result_value==mark)
@@ -93,6 +102,11 @@ void CCA::append(QList<double> data)
             emit result(result_value);
         }
     }
+}
+
+void CCA::start()
+{
+    mark=4;
 }
 /*
  * 输入参数：
@@ -166,6 +180,10 @@ void CCA::init()
     mark=0;
     all_num=0;
     valid_num=0;
+
+#if Channel_Select_Status
+    select_channel={27,19,26,29,17,31,30,16};
+#endif
     //参考识别
     ref_rate[0]=8;
     ref_rate[1]=8.6;

@@ -2,7 +2,7 @@
 #include "QTimer"
 #include "QDebug"
 #include "QKeyEvent"
-SSVEPWidget::SSVEPWidget(QWidget *parent) : QWidget(parent)
+SSVEPWidget::SSVEPWidget(QObject *parent) : QObject(parent)
 {
     initProcess();
 }
@@ -14,6 +14,7 @@ SSVEPWidget::~SSVEPWidget()
         ssvep_process->kill();
         ssvep_process->waitForFinished();
     }
+    qDebug()<<"关闭窗口";
     delete ssvep_process;
 }
 
@@ -37,6 +38,27 @@ void SSVEPWidget::start()
 void SSVEPWidget::stop()
 {
     ssvep_process->kill();
+}
+
+void SSVEPWidget::display()
+{
+    QByteArray command;
+    command.append(char(0));
+    send(command);
+}
+
+void SSVEPWidget::show()
+{
+    QByteArray command;
+    command.append(char(1));
+    send(command);
+}
+
+void SSVEPWidget::hide()
+{
+    QByteArray command;
+    command.append(char(2));
+    send(command);
 }
 
 void SSVEPWidget::send(QByteArray data)
@@ -87,13 +109,4 @@ HWND SSVEPWidget::findWindowById(DWORD pid)
     data.hwnd = NULL;
     EnumWindows(EnumWindowsProc, (LPARAM)&data);
     return data.hwnd;
-}
-
-void SSVEPWidget::keyPressEvent(QKeyEvent *event)
-{
-    if(event->key()==Qt::Key_Space)
-    {
-        char data=0;
-        ssvep_process->write(&data,1);
-    }
 }

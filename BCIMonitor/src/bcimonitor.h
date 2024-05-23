@@ -45,6 +45,8 @@ signals:
     void markChanged(quint8);
     //滤波数据
     void filterData(QList<double>);
+    //与计算通信
+    void calculateResult(int);
 private slots:
     void connectAmplifier();
 private:

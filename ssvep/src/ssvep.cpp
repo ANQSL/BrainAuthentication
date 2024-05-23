@@ -9,20 +9,26 @@
 #include "timerevent.h"
 #include "iostream"
 #include "QtConcurrent/QtConcurrent"
+#include "QDateTime"
 #define PI acos(-1)
 SSVEP::SSVEP()
 {
-    this->setWindowFlags(Qt::Tool|Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::Tool|Qt::WindowStaysOnTopHint);
     QtConcurrent::run(this, &SSVEP::readInput);
+    connect(this,&SSVEP::newCommand,this,&SSVEP::readCommand);
     initGrayWeight();
     initTimer();
     initMarks();
     initCommunication();
-    this->resize(800,600);
+    this->resize(1600,800);
+    initFrames();
 }
 SSVEP::~SSVEP()
 {
     delete communication;
+    timer->stop();
+    read_status=false;
+    QThread::usleep(50);
     delete timer;
 }
 void SSVEP::paintEvent(QPaintEvent *event)
@@ -34,6 +40,8 @@ void SSVEP::paintEvent(QPaintEvent *event)
        {
              QPainter painter(this);
              painter.drawPixmap(this->rect(),frames[current_frame]);
+//             painter.fillRect(rect(), Qt::black);
+//             display(painter,current_frame);
              current_frame++;
        }
        else
@@ -75,8 +83,8 @@ void SSVEP::drawArrows(QPainter &painter,int x, int y, QColor color,Direction m_
 
     // 计算箭头路径
     QPainterPath path;
-    int bias=100;
-    int arrow_bias=30;
+    int bias=150;
+    int arrow_bias=50;
     switch (m_direction) {
        case Up:
             {
@@ -241,10 +249,10 @@ void SSVEP::display(QPainter &painter,int i,int frep)
 {
     if(frep==-1)
     {
-        drawArrows(painter,width()/2,100,qRgb(gray_weight[0][i],gray_weight[0][i],gray_weight[0][i]),Up);
-        drawArrows(painter,width()/2,height()-100,qRgb(gray_weight[1][i],gray_weight[1][i],gray_weight[1][i]),Down);
-        drawArrows(painter,100,height()/2,qRgb(gray_weight[2][i],gray_weight[2][i],gray_weight[2][i]),Left);
-        drawArrows(painter,width()-100,height()/2,qRgb(gray_weight[3][i],gray_weight[3][i],gray_weight[3][i]),Right);
+        drawArrows(painter,width()/2,150,qRgb(gray_weight[0][i],gray_weight[0][i],gray_weight[0][i]),Up);
+        drawArrows(painter,width()/2,height()-150,qRgb(gray_weight[3][i],gray_weight[3][i],gray_weight[3][i]),Down);
+        drawArrows(painter,150,height()/2,qRgb(gray_weight[1][i],gray_weight[1][i],gray_weight[1][i]),Left);
+        drawArrows(painter,width()-150,height()/2,qRgb(gray_weight[2][i],gray_weight[2][i],gray_weight[2][i]),Right);
     }
     else {
         drawArrows(painter,width()/2,150,qRgb(gray_weight[frep][i],gray_weight[frep][i],gray_weight[frep][i]),Up);
@@ -320,9 +328,19 @@ void SSVEP::initFrames(quint8 type)
 
 void SSVEP::initFrames()
 {
-
+    frames.clear();
+    quint16 frame_num=((config.display_time/1000))*60;
+    for(int i=0;i<frame_num;i++)
+    {
+        QPixmap pixmap(width(),height());
+        pixmap.fill(Qt::black);
+        QPainter painter(&pixmap);
+        display(painter,i);
+//        pixmap.save(QString("%1.jpg").arg(i+1));
+        frames.append(pixmap);
+    }
 }
-void SSVEP::start_display(int mode)
+void SSVEP::start_display()
 {
     communication->connectAmplifier();
     type=true;
@@ -333,13 +351,13 @@ void SSVEP::start_display(int mode)
        print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
        emit markChanged(marks[current_task_num]+1);
     }
+    emit markChanged(4);
     start_time=QDateTime::currentMSecsSinceEpoch();
     timer->start(16);
 }
 
 void SSVEP::readInput()
 {
-     bool ok = true;
      char chBuf[4096];
      DWORD dwRead;
      HANDLE hStdinDup;
@@ -353,15 +371,29 @@ void SSVEP::readInput()
                      0, false, DUPLICATE_SAME_ACCESS);
 
      CloseHandle(hStdin);
-     while (ok) {
-         ok = ReadFile(hStdinDup, chBuf, sizeof(chBuf), &dwRead, NULL);
+     while (read_status) {
+         bool ok = ReadFile(hStdinDup, chBuf, sizeof(chBuf), &dwRead, NULL);
          // emit sig_log(QLatin1String("ok is:")+QString::number(ok));
          if (ok && dwRead != 0)
          {
-              if(chBuf[0]==0)
-              {
-                  start_display(1);
-              }
+              emit newCommand(chBuf[0]);
          }
+         QThread::usleep(10);
      }
+}
+
+void SSVEP::readCommand(quint8 command)
+{
+      if(command==0)
+      {
+          start_display();
+      }
+      if(command==1)
+      {
+          show();
+      }
+      if(command==2)
+      {
+          hide();
+      }
 }

@@ -17,6 +17,7 @@ public:
     enum Direction { Up, Down, Left, Right };
 signals:
     void markChanged(quint8);
+    void newCommand(quint8);
 private:
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
@@ -33,7 +34,7 @@ private:
     int current_frame=0;
     Timer *timer;
     void initTimer();
-    bool mode;//ture：采集模式，false:识别模式
+    bool mode=false;//ture：采集模式，false:识别模式
     QList<quint8> marks;
     int current_task_num=0;//当前任务数
     void initMarks();
@@ -47,10 +48,14 @@ private:
     void initFrames(quint8 type);
     void initFrames();
 
-    void start_display(int mode);
+    void start_display();
 
     //进程通信
     void readInput();
+    //读取进程状态
+    bool read_status=true;
+    // 处理指令
+    void readCommand(quint8);
 
 };
 

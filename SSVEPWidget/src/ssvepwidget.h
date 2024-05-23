@@ -4,14 +4,17 @@
 #include <QWidget>
 #include "QProcess"
 #include "Windows.h"
-class SSVEPWidget : public QWidget
+class SSVEPWidget : public QObject
 {
     Q_OBJECT
 public:
-    explicit SSVEPWidget(QWidget *parent = nullptr);
+    explicit SSVEPWidget(QObject *parent = nullptr);
     ~SSVEPWidget();
     void start();
     void stop();
+    void display();
+    void show();
+    void hide();
     void send(QByteArray);
 private slots:
     void recevice();
@@ -26,7 +29,6 @@ private:
     void initProcess();
     static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
     HWND findWindowById(DWORD);
-    void keyPressEvent(QKeyEvent *event)override;
 };
 
 #endif // SSVEPWIDGET_H

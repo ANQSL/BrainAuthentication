@@ -24,6 +24,8 @@ add_subdirectory(DataProcess)
 add_subdirectory(ControlFly)
 add_subdirectory(SSVEPWidget)
 add_subdirectory(CustomMessageHandler)
+add_subdirectory(CalculateTest)
+
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 file(COPY ${CURVE_RES} DESTINATION "res")
 ## 添加mat库
@@ -32,6 +34,7 @@ message("${MonitorRes}")
 file(GLOB SRC "src/*")
 
 add_executable(${PROJECT_NAME} WIN32 main.cpp ${SRC}  ${MonitorRes} ${AmpliferRes})
-target_link_libraries(${PROJECT_NAME}  BCIMonitor CCA DataProcess ControlFly SSVEPWidget CustomMessageHandler)
+target_link_libraries(${PROJECT_NAME}  BCIMonitor CCA DataProcess ControlFly SSVEPWidget
+                      CustomMessageHandler CalculateTest)
 target_link_libraries(${PROJECT_NAME}  Qt5::Widgets)
 target_include_directories(${PROJECT_NAME} PUBLIC src)

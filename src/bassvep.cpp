@@ -10,18 +10,29 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
     initSSVEPWidget();
     initTaskWidget();
     initIndexWidget();
-    connect(bcimonitor,&BCIMonitor::markChanged,cca,&CCA::start);
+//    connect(bcimonitor,&BCIMonitor::markChanged,cca,&CCA::start);
     connect(bcimonitor,&BCIMonitor::filterData,this,[=](QList<double> data){
         data=filter->filter(data);
         cca->append(data);
     });
     connect(cca,&CCA::result,controlfly,&ControlFly::command);
-
     connect(taskwidget,&start_game::start,this,[=](){
-        ssvep_widget->start();
-        bcimonitor->startDataTransmit();
+        QTimer::singleShot(1000,[=](){
+            ssvep_widget->display();
+            cca->start();
+            bcimonitor->startDataTransmit();
+        });
+
     });
     indexwidget->show();
+
+    connect(bcimonitor,&BCIMonitor::calculateResult,&calculate_test,&CalculateTest::appendRecognition);
+    connect(cca,&CCA::result,&calculate_test,&CalculateTest::appendSSVEP);
+
+    calculate_test.show();
+
+    ssvep_widget->start();
+    ssvep_widget->show();
 }
 
 BASSVEP::~BASSVEP()
@@ -31,6 +42,7 @@ BASSVEP::~BASSVEP()
     delete filter;
     delete controlfly;
     delete ssvep_widget;
+    delete indexwidget;
 }
 
 void BASSVEP::initFilter()

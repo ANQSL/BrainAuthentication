@@ -224,8 +224,10 @@ void BCIMonitor::setAmplifierConnect()
 //    降采样
     connect(amplifier,SIGNAL(readyRead(QList<double>)),processdata,SLOT(receiveData(QList<double>)));
     connect(amplifier,&Amplifier::readyRead,this,&BCIMonitor::filterData);
+    //通信
     connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),datacommunicate,SLOT(append(QList<double>)));
     connect(datacommunicate,&DataCommunicate::readMark,this,&BCIMonitor::appendMark);
+    connect(datacommunicate,&DataCommunicate::result,this,&BCIMonitor::calculateResult);
     //插件
     connect(amplifier,&Amplifier::loadPluginSucceed,this,[=](){
             emit setChannelNum(amplifier->getChannelName().size());

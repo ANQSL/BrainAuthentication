@@ -29,9 +29,10 @@ class Calculate(threading.Thread):
                 data = copy.deepcopy(communicate.recv_data)
                 communicate.lock.release()
                 communicate.recv_status = False
-                data.transpose(1, 0, 2)
-
+                data = data.transpose(1, 0, 2)
                 data = data.reshape(32, 5000)
+                np.save("data.npy",data)
+                # pass
                 print("开始计算")
                 # 计算
                 start_time = time.time()

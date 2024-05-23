@@ -1,8 +1,9 @@
 #include "protocolsb.h"
 #include "QDebug"
+#include "QFile"
 ProtocolsB::ProtocolsB()
 {
-       Encryption_init();
+    Encryption_init();
 }
 
 int ProtocolsB::findBufferHead(QByteArray data)
@@ -76,33 +77,48 @@ QList<double> ProtocolsB::analysisEEGdata(QByteArray raw_data, QList<double> &ra
    raw_channel_data.clear();
    QList<double> chart_channel_data;
    unsigned char *data=(unsigned char*)malloc(1030);
-   memcpy(data,raw_data.data(),1030);
+   memcpy(data,(unsigned char*)raw_data.data(),1030);
    if(decode_status)
    {
       SMS4Decrypt((ulong*)(data+7),1023,DERK);
+#if  SAVE_RAW_DATA
+      memcpy(save_data+(current_point*1030),data,1030);
+      QByteArray _data;
+      _data.append((char*)data,1030);
+      current_point++;
+      if(current_point==SAVE_DATA_LEN)
+      {
+          qDebug()<<save_data[103]<<save_data[104];
+          qDebug()<<"文件已保存";
+          QFile file("raw_data.bin");
+          file.open(QIODevice::WriteOnly);
+          file.write((char*)save_data,1030*SAVE_DATA_LEN);
+          file.close();
+          current_point=0;
+      }
+#endif
    }
-   QByteArray decode_data;
-   decode_data.append((char*)data,1030);
+    quint8 *decode_data=(quint8*)data;
+    //数据转化
+    for(int i=0;i<10;i++)
+    {
+      quint8 *_decode_data=decode_data+i*103;
+      quint8 *data_frame=_decode_data+7;
+      for(int j=0;j<channel_num;j++)
+      {
+          DataTransformation data;
+          data.buffer[0]=data_frame[j*3+2];
+          data.buffer[1]=data_frame[j*3+1];
+          data.buffer[2]=(data_frame[j*3]^0x80);
+          data.buffer[3]=00;
+          quint32 value=data.data;
+          double real_value=(value*1.0-8388608)/8388608*5000000/50;
+          chart_channel_data.append(real_value);
+          raw_channel_data.append(value);
+
+      }
+    }
    free(data);
-   //数据转化
-   for(int i=0;i<10;i++)
-   {
-       QByteArray _decode_data=decode_data.mid(0,103);
-       decode_data.remove(0,103);
-       QByteArray data_frame=_decode_data.right(96);
-       for(int j=0;j<channel_num;j++)
-       {
-           DataTransformation data;
-           data.buffer[0]=data_frame.at(j*3+2);
-           data.buffer[1]=data_frame.at(j*3+1);
-           data.buffer[2]=data_frame.at(j*3);
-           data.buffer[3]=00;
-           quint32 value=data.data;
-           double real_value=(value*1.0-8388608)/8388608*5000000/24;
-           chart_channel_data.append(real_value);
-           raw_channel_data.append(value);
-       }
-   }
    return chart_channel_data;
 }
 

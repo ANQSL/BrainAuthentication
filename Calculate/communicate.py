@@ -79,11 +79,11 @@ class Communication(threading.Thread):
             if self.data_client is not None:
                 try:
                     result = struct.pack('i', calculate_result)
-                    print(result)
+                    # print(result)
                     self.data_client.send(result)
                     print("计算结果：{}".format(calculate_result))
                     # 用于一次性识别中需要去除之前的数据,例如身份识别，而像认知任务着不需要
-                    lock.locked()
+                    lock.acquire()
                     recv_data = None
                     lock.release()
                 except Exception as e:
