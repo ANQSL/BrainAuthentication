@@ -15,12 +15,13 @@ void DataThread::run()
             QList<QList<double>> all_data=device->getChartData();
             int buf_num=all_data.size();
             for(int i=0;i<buf_num;i++){
-                QList<double> data=all_data.at(i);
-                emit rawDataFinished(data);
-                data=filter.filterData(data);
-                if(!data.isEmpty())
+                QList<double> raw_data=all_data.at(i);
+                emit rawDataFinished(raw_data);
+                QList<double> filter_data=filter.filterData(raw_data);
+                if(!filter_data.isEmpty())
                 {
-                    emit readFinish(data);
+                    emit readFinish(filter_data);
+                    emit readDataFinished(raw_data,filter_data);
                     if(destroyFlag)
                     {
                         destroyFlag=false;

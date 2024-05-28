@@ -102,6 +102,7 @@ void BCIMonitor::appendMark(quint8 type)
 {
 //    qDebug()<<"当前时间戳"<<QDateTime::currentMSecsSinceEpoch();
     curvegroup->appendMark(QString(type));
+    qDebug()<<"接收mark为:"<<type;
     filestorage->appendEvent(type);
     emit markChanged(type);
 }
@@ -220,10 +221,10 @@ void BCIMonitor::setAmplifierConnect()
 {
     //数据
     //存储模块
-    connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),filestorage,SLOT(append_eeg(QList<double>)));
+    connect(amplifier,SIGNAL(readyRead(QList<double>,QList<double>)),filestorage,SLOT(append_eeg(QList<double>,QList<double>)));
 //    降采样
     connect(amplifier,SIGNAL(readyRead(QList<double>)),processdata,SLOT(receiveData(QList<double>)));
-    connect(amplifier,&Amplifier::readyRead,this,&BCIMonitor::filterData);
+    connect(amplifier,QOverload<QList<double>>::of(&Amplifier::readyRead),this,&BCIMonitor::filterData);
     //通信
     connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),datacommunicate,SLOT(append(QList<double>)));
     connect(datacommunicate,&DataCommunicate::readMark,this,&BCIMonitor::appendMark);

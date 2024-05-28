@@ -5,7 +5,7 @@
 #include "protocols.h"
 
 //是否保存原始数据
-#define SAVE_RAW_DATA 1
+#define SAVE_RAW_DATA 0
 #define SAVE_DATA_LEN 10
 extern "C" {
 

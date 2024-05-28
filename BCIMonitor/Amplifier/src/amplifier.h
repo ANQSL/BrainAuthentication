@@ -42,6 +42,7 @@ signals:
     void error(QString);
     void connected();
     void loadPluginSucceed();
+    void readyRead(QList<double>,QList<double>);
 
 private slots:
     void checkConnectStatus();

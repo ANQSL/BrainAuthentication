@@ -18,6 +18,7 @@ public:
 signals:
     void readFinish(QList<double>);
     void rawDataFinished(QList<double>);
+    void readDataFinished(QList<double>,QList<double>);
 private:
     bool status;
     bool destroyFlag;

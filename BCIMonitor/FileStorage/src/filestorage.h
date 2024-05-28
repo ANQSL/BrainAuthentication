@@ -36,6 +36,7 @@ public slots:
     void setFileNameMsg(QString account,int game_id);
     //数据插入
     void append_eeg(QList<double> data);
+    void append_eeg(QList<double> raw_data,QList<double> filter_data);
     void append(QList<QList<double>> data);
 private:
     //暂停标志
@@ -59,6 +60,17 @@ private:
     double* eegdata_end;
     //脑电数据计数
     quint32 eegdata_num;
+
+    //脑电滤波数据头指针
+    double *filter_eeg_head;
+    //脑电滤波数据尾指针
+    double *filter_eeg_end;
+    //脑电滤波数据计数
+    quint32 filter_eeg_num;
+
+    //滤波存储过程
+    Storage *filter_storage;
+
     //脑电通道数
     quint8 channel_num;
     //脑电采样率

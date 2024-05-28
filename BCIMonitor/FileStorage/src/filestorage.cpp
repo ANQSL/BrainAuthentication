@@ -26,6 +26,7 @@ FileStorage::~FileStorage()
     {
         free(eegdata_head);
         free(heart_head);
+        free(filter_eeg_head);
     }
 }
 void FileStorage::append(QList<QList<double> > data)
@@ -162,14 +163,33 @@ void FileStorage::setFileNameMsg(QString account, int game_id)
 
 void FileStorage::append_eeg(QList<double> data)
 {
-    memcpy(eegdata_end,data.toVector().data(),data.size()*8);
-    eegdata_num+=data.size()/channel_num;
-    eegdata_end+=data.size();
-    if(eegdata_num==(srate*StorageConfig::getTime()))
+    if(start_flag)
     {
-        save();
+        memcpy(eegdata_end,data.toVector().data(),data.size()*8);
+        eegdata_num+=data.size()/channel_num;
+        eegdata_end+=data.size();
+        if(eegdata_num==(srate*StorageConfig::getTime()))
+        {
+            save();
+        }
     }
+}
 
+void FileStorage::append_eeg(QList<double> raw_data, QList<double> filter_data)
+{
+    if(start_flag)
+    {
+        memcpy(eegdata_end,raw_data.toVector().data(),raw_data.size()*8);
+        eegdata_num+=raw_data.size()/channel_num;
+        eegdata_end+=raw_data.size();
+        memcpy(filter_eeg_end,filter_data.toVector().data(),filter_data.size()*8);
+        filter_eeg_num+=filter_data.size()/channel_num;
+        filter_eeg_end+=filter_data.size();
+        if(eegdata_num==(srate*StorageConfig::getTime()))
+        {
+            save();
+        }
+    }
 }
 void FileStorage::creatFile()
 {
@@ -190,21 +210,28 @@ void FileStorage::creatFile(QString name)
 {
     this->stop_flag=false;
     storage->setFilename(name);
+    QFileInfo info(name);
+    QString filter_file_name=info.path()+"/"+info.baseName()+"_filter.mat";
+    qDebug()<<filter_file_name;
+    filter_storage->setFilename(filter_file_name);
+
 }
 
 void FileStorage::appendEvent(int type)
 {
-    storage->appendEvent(type,storage->getPoint_num());
+    storage->appendEvent(type,eegdata_num);
 }
 void FileStorage::init()
 {
     this->heart_num=0;
     this->eegdata_num=0;
+    this->filter_eeg_num=0;
     this->start_flag=false;
     this->pause_flag=false;
     this->stop_flag=true;
     this->mode=1;
     storage=new MatStorage;
+    filter_storage=new MatStorage;
     initTimer();
     //初始化配置
     StorageConfig::init();
@@ -217,8 +244,12 @@ void FileStorage::init()
     this->timer->setInterval(storage_time*1000);
     //初始化内存：内存大小64*1000*60*2
     //脑电信号
-    eegdata_head=(double*)malloc(64*1000*8*storage_time);
+    eegdata_head=(double*)malloc(32*1000*8*storage_time);
     eegdata_end=eegdata_head;
+
+    filter_eeg_head=(double*)malloc(32*1000*8*storage_time);
+    filter_eeg_end=filter_eeg_head;
+    qDebug()<<filter_eeg_head;
     //心电信号
     heart_head=(double*)malloc(4*100*8*storage_time);
     heart_end=heart_head;
@@ -243,5 +274,9 @@ void FileStorage::save()
     heart_end=heart_head;
     eegdata_num=0;
     heart_num=0;
+
+    filter_storage->save(filter_eeg_head,filter_eeg_num);
+    filter_eeg_end=filter_eeg_head;
+    filter_eeg_num=0;
 
 }

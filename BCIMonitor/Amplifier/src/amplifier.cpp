@@ -148,8 +148,9 @@ void Amplifier::initTimer()
 void Amplifier::initDataThread()
 {
     datathread=new DataThread;
-    connect(datathread,&DataThread::readFinish,this,&Amplifier::readyRead);
+    connect(datathread,&DataThread::readFinish,this,QOverload<QList<double>>::of(&Amplifier::readyRead));
     connect(datathread,&DataThread::rawDataFinished,this,&Amplifier::rawDataFinished);
+    connect(datathread,&DataThread::readDataFinished,this,QOverload<QList<double>,QList<double>>::of(&Amplifier::readyRead));
 }
 
 void Amplifier::initPluginManage()
