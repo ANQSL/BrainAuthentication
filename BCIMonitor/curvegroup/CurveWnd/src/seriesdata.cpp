@@ -103,6 +103,11 @@ void SeriesData::rescale()
     }
 }
 
+void SeriesData::setXRange(int max_point_num)
+{
+   clear();
+   this->max_point_num=max_point_num;
+}
 double SeriesData::min()
 {
     return min_value;

@@ -196,6 +196,8 @@ void BCIMonitor::setCurveConnect()
     connect(toolbar,&MonitorToolBar::ReduceChannelSignal,curvegroup,&CurveGroup::reduceGroupChannel);
     connect(toolbar,&MonitorToolBar::increasescaleSignal,curvegroup,&CurveGroup::increaseScale);
     connect(toolbar,&MonitorToolBar::ReducescaleSignal,curvegroup,&CurveGroup::reduceScale);
+    connect(toolbar,&MonitorToolBar::ReducedotSignal,curvegroup,&CurveGroup::reduceXRange);
+    connect(toolbar,&MonitorToolBar::increasedotSignal,curvegroup,&CurveGroup::increaseXRange);
     connect(amplifier,SIGNAL(readyRead(QList<double>)),curvegroup,SLOT(append(QList<double>)));
 }
 void BCIMonitor::initFileStorage()

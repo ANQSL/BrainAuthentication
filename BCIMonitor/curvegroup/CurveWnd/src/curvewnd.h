@@ -63,6 +63,10 @@ public:
     void increaseScaleFactor();
     void reduceScaleFactor();
 
+    //修改x的范围
+    void increaseXRange();
+    void reduceXRange();
+
     int getCurveNum();
 
 };

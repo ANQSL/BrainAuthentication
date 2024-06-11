@@ -25,6 +25,7 @@ public:
     void increaseScaleFactor();
     void reduceScaleFactor();
     void rescale();
+    void setXRange(int max_point_num);
     double min();
     double max();
 private:

@@ -91,6 +91,7 @@ void CCA::append(QList<double> data)
         if(current_data_num==mydatalength2)
         {
             quint8 result_value=Classify(this->data,32);
+            qDebug()<<result_value;
             current_data_num=0;
             all_num++;
             if(result_value==mark)

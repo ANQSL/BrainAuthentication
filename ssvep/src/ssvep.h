@@ -34,7 +34,7 @@ private:
     int current_frame=0;
     Timer *timer;
     void initTimer();
-    bool mode=false;//ture：采集模式，false:识别模式
+    bool mode=true;//ture：采集模式，false:识别模式
     QList<quint8> marks;
     int current_task_num=0;//当前任务数
     void initMarks();

@@ -112,7 +112,7 @@ QList<double> ProtocolsB::analysisEEGdata(QByteArray raw_data, QList<double> &ra
           data.buffer[2]=(data_frame[j*3]^0x80);
           data.buffer[3]=00;
           quint32 value=data.data;
-          double real_value=(value*1.0-8388608)/8388608*5000000/50;
+          double real_value=(value*1.0-8388608)/8388608*5000000/24;
           chart_channel_data.append(real_value);
           raw_channel_data.append(value);
 

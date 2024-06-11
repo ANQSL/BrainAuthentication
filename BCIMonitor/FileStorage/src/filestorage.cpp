@@ -134,16 +134,19 @@ void FileStorage::setChannel_num(quint8 value)
 {
     channel_num=value;
     storage->setChannelNum(value);
+    filter_storage->setChannelNum(value);
 }
 
 void FileStorage::setSrate(quint16 rate)
 {
     storage->setSrate(rate);
+    filter_storage->setSrate(rate);
     this->srate=rate;
 }
 void FileStorage::setChanlocs(QVariantList value)
 {
     storage->setChanlocs(value);
+    filter_storage->setChanlocs(value);
 }
 
 void FileStorage::setFileNameMsg(QString account, int game_id)
@@ -212,7 +215,6 @@ void FileStorage::creatFile(QString name)
     storage->setFilename(name);
     QFileInfo info(name);
     QString filter_file_name=info.path()+"/"+info.baseName()+"_filter.mat";
-    qDebug()<<filter_file_name;
     filter_storage->setFilename(filter_file_name);
 
 }
@@ -249,7 +251,6 @@ void FileStorage::init()
 
     filter_eeg_head=(double*)malloc(32*1000*8*storage_time);
     filter_eeg_end=filter_eeg_head;
-    qDebug()<<filter_eeg_head;
     //心电信号
     heart_head=(double*)malloc(4*100*8*storage_time);
     heart_end=heart_head;
@@ -278,5 +279,6 @@ void FileStorage::save()
     filter_storage->save(filter_eeg_head,filter_eeg_num);
     filter_eeg_end=filter_eeg_head;
     filter_eeg_num=0;
+    qDebug()<<filter_eeg_num;
 
 }

@@ -13,7 +13,7 @@
 #define PI acos(-1)
 SSVEP::SSVEP()
 {
-    this->setWindowFlags(Qt::Tool|Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint);
     QtConcurrent::run(this, &SSVEP::readInput);
     connect(this,&SSVEP::newCommand,this,&SSVEP::readCommand);
     initGrayWeight();
@@ -39,9 +39,18 @@ void SSVEP::paintEvent(QPaintEvent *event)
        if((end_time-start_time)<=5000)
        {
              QPainter painter(this);
-             painter.drawPixmap(this->rect(),frames[current_frame]);
-//             painter.fillRect(rect(), Qt::black);
-//             display(painter,current_frame);
+//             painter.drawPixmap(this->rect(),frames[current_frame]);
+             painter.fillRect(rect(), Qt::black);
+             if(mode)
+             {
+                display(painter,current_frame,marks[current_task_num]);
+             }
+             else
+             {
+                display(painter,current_frame);
+             }
+
+
              current_frame++;
        }
        else
@@ -70,7 +79,7 @@ void SSVEP::keyPressEvent(QKeyEvent *event)
     print("第"+QString::number(current_task_num+1)+"次任务");
     if(mode)
     {
-       initFrames(marks[current_task_num]);
+//       initFrames(marks[current_task_num]);
        print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
        emit markChanged(marks[current_task_num]+1);
     }

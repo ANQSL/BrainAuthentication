@@ -223,6 +223,34 @@ void CurveWnd::reduceScaleFactor()
     }
 }
 
+void CurveWnd::reduceXRange()
+{
+    if(max_point_num>=1000)
+    {
+        max_point_num-=250;
+        this->axis_x->setRange(0,max_point_num);
+        this->maxwidget->setRangeX(0,max_point_num);
+        for(auto data:seriesdata)
+        {
+           data->setXRange(max_point_num);
+        }
+    }
+
+}
+void CurveWnd::increaseXRange()
+{
+    if(max_point_num<3000)
+    {
+        max_point_num+=250;
+        this->axis_x->setRange(0,max_point_num);
+        this->maxwidget->setRangeX(0,max_point_num);
+        for(auto data:seriesdata)
+        {
+           data->setXRange(max_point_num);
+        }
+    }
+}
+
 int CurveWnd::getCurveNum()
 {
     return curve_num;

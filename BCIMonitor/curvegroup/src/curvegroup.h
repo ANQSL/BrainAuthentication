@@ -28,10 +28,13 @@ public:
 
     //模拟数据
     void timerEvent(QTimerEvent *event);
-    //修改缩放因子
+    //修改y的范围
     void setScale(int value);
     void increaseScale();
     void reduceScale();
+    //修改x的范围
+    void increaseXRange();
+    void reduceXRange();
     //修改通道数
     void reduceGroupChannel();
     void increaseGroupChannel();

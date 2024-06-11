@@ -5,3 +5,4 @@ CMakeLists.txt.*
 *.rar
 build*/
 .idea/
+ssvep_data/

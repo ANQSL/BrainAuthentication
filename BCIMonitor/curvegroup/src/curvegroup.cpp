@@ -197,6 +197,16 @@ void CurveGroup::reduceScale()
     curvewnd->reduceScaleFactor();
 }
 
+void CurveGroup::increaseXRange()
+{
+    curvewnd->increaseXRange();
+}
+
+void CurveGroup::reduceXRange()
+{
+   curvewnd->reduceXRange();
+}
+
 void CurveGroup::reduceGroupChannel()
 {
     if(curve_num_group>1)

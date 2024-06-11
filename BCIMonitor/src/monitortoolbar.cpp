@@ -66,7 +66,7 @@ void MonitorToolBar::disabledAction()
 
 void MonitorToolBar::enableAction()
 {
-    startAction.setEnabled(true);
+//    startAction.setEnabled(true);
     //stopAction.setEnabled(true);
     decodeAndEncodeAction.setEnabled(true);
     //encodeAction.setEnabled(true);
@@ -180,6 +180,7 @@ void MonitorToolBar::initConnect()
             emit this->monitorSignal();
             monitorAction.setIcon(QIcon(":/monitor2.png"));
             monitorFlag = 0;
+            startAction.setEnabled(true);
         }
         else
         {
@@ -187,6 +188,9 @@ void MonitorToolBar::initConnect()
             emit this->stopmonitorSignal();
             monitorAction.setIcon(QIcon(":/monitor.png"));
             monitorFlag = 1;
+            startAction.setEnabled(false);
+            stopAction.setEnabled(false);
+            pauseAction.setEnabled(false);
         }
     });
 
