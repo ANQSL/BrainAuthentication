@@ -23,7 +23,8 @@ private:
 public slots:
     void tabClickSlot(int index);
 
-
+signals:
+    void tabChanged(int index);
 private slots:
     void on_min_clicked();
 

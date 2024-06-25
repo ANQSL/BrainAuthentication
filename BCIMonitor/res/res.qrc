@@ -19,5 +19,6 @@
         <file>monitor.png</file>
         <file>monitor2.png</file>
         <file>Reducedot.png</file>
+        <file>setting.png</file>
     </qresource>
 </RCC>

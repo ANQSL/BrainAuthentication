@@ -5,6 +5,7 @@
 #include "seriespoint.h"
 #include "QToolButton"
 #include "datadown.h"
+#include "curveconfigwidget.h"
 class CurveGroup:public QWidget
 {
     Q_OBJECT
@@ -48,6 +49,8 @@ public:
     void setCurveStyle();
     void clear();
 
+    CurveConfigWidget *getCurveconfigwidget() const;
+
 public slots:
     void next();
     void last();
@@ -71,6 +74,10 @@ private:
     void initLayout();
     //数据降采样
     DataDown datadown;
+
+    //配置窗口
+    CurveConfigWidget *curveconfigwidget;
+    void initCurveConfigWidget();
 };
 
 #endif // CURVEGROUP_H

@@ -33,6 +33,7 @@ void CurveGroup::init()
     this->scale=1;
 
 //    datadown.setParent(this);
+    initCurveConfigWidget();
 }
 
 void CurveGroup::setConnect()
@@ -42,6 +43,16 @@ void CurveGroup::initLayout()
 {
     this->widget_layout->addWidget(curvewnd);
     this->setLayout(widget_layout);
+}
+
+CurveConfigWidget *CurveGroup::getCurveconfigwidget() const
+{
+    return curveconfigwidget;
+}
+
+void CurveGroup::initCurveConfigWidget()
+{
+    curveconfigwidget=new CurveConfigWidget;
 }
 void CurveGroup::setCurveNumGroup(int num)
 {

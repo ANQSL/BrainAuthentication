@@ -19,6 +19,7 @@ BCIMonitor::~BCIMonitor()
     delete amplifier;
     delete processdata;
     delete datacommunicate;
+    delete monitorConfigWidget;
 }
 
 void BCIMonitor::startDataTransmit()
@@ -114,6 +115,7 @@ void BCIMonitor::init()
     initFileStorage();
     initAmplifier();
     initProcessData();
+    initMonitorConfigWidget();
 }
 
 void BCIMonitor::setConnect()
@@ -228,7 +230,10 @@ void BCIMonitor::setAmplifierConnect()
     connect(amplifier,SIGNAL(readyRead(QList<double>)),processdata,SLOT(receiveData(QList<double>)));
     connect(amplifier,QOverload<QList<double>>::of(&Amplifier::readyRead),this,&BCIMonitor::filterData);
     //通信
-    connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),datacommunicate,SLOT(append(QList<double>)));
+    //原始数据
+//    connect(amplifier,SIGNAL(rawDataFinished(QList<double>)),datacommunicate,SLOT(append(QList<double>)));
+    //滤波数据
+    connect(amplifier,SIGNAL(readyRead(QList<double>)),datacommunicate,SLOT(append(QList<double>)));
     connect(datacommunicate,&DataCommunicate::readMark,this,&BCIMonitor::appendMark);
     connect(datacommunicate,&DataCommunicate::result,this,&BCIMonitor::calculateResult);
     //插件
@@ -255,6 +260,19 @@ void BCIMonitor::setAmplifierConnect()
     connect(amplifier,&Amplifier::disconnected,this,[=](){
         toolbar->disabledAction();
         QMessageBox::about(this,"消息提示","设备断开");
+    });
+}
+
+void BCIMonitor::initMonitorConfigWidget()
+{
+    monitorConfigWidget=new MonitorConfigWidget;
+    monitorConfigWidget->setWindowFlag(Qt::Dialog);
+
+
+//    monitorConfigWidget->addConfigWidget(curvegroup->getCurveconfigwidget(),"信号显示");
+    monitorConfigWidget->addConfigWidget(filestorage->getStorageconfigwidget(),"文件保存");
+    connect(toolbar,&MonitorToolBar::settingSignal,this,[=](){
+        monitorConfigWidget->exec();
     });
 }
 

@@ -86,7 +86,7 @@ void DataCommunicate::disconnection()
 void DataCommunicate::initCommunicate()
 {
     communicate=new TcpCommunicate;
-    connect(communicate,&TcpCommunicate::result,this,[=](int value)
+    connect(communicate,&TcpCommunicate::result,this,[=](QByteArray value)
     {
         send_status=!send_status;
         send_time=0;

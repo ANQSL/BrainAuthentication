@@ -27,6 +27,6 @@ Message* CustomMessageHandler::installMessageHandler()
 void Message::rececive(QtMsgType type, QString msg)
 {
     QTextStream console(stdout);
-    console<<msg<<endl;
+    log.save(msg);
     emit readyRead(type,msg);
 }

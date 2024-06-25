@@ -32,6 +32,8 @@ private:
     QAction ReduceChannelAction;
     QAction ReducedotAction;
     QAction ReducescaleAction;
+
+    QAction settingAction;//设置
     void initConnect();
 signals:
     void connectSignal();
@@ -51,6 +53,7 @@ signals:
     void ReducedotSignal();
     void ReducescaleSignal();
     void stopmonitorSignal();
+    void settingSignal();
 };
 
 #endif // MONITORTOOLBAR_H

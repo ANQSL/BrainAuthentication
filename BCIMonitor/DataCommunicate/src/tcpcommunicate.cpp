@@ -99,10 +99,9 @@ void TcpCommunicate::setSocketConnect()
 //       socket=NULL;
 //    });
     connect(socket,&QTcpSocket::readyRead,this,[=](){
-       QByteArray data=socket->read(1);
-//       qDebug()<<data.toInt();
-       int result_value=data[0];
-       emit result(result_value);
+       QByteArray data=socket->readAll();
+//       qDebug()<<QString(data);
+       emit result(data);
     });
 }
 void TcpCommunicate::setMarkSocketConnect()

@@ -262,7 +262,6 @@ bool SQL::addUser(QStringList data)
     }
     return false;
 }
-
 void SQL::cancelUser(int user_id)
 {
     QString name;
@@ -271,6 +270,20 @@ void SQL::cancelUser(int user_id)
     query.exec(sql);
     sql=QString("delete from user_role where user_id=%1").arg(user_id);
     query.exec(sql);
+}
+
+QList<int> SQL::userPressmission(int id)
+{
+    QList<int> permission_id;
+    QString sql=QString("select distinct permmission_id from user_permission where id=%1").arg(id);
+    QSqlQuery query;
+    if(query.exec(sql))
+    {
+        while (query.next()) {
+            permission_id.append(query.value(0).toInt());
+        }
+    }
+    return permission_id;
 }
 void SQL::initDataBase()
 {

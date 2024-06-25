@@ -1,4 +1,5 @@
 # 通信线程，主要负责与采集的通信
+import json
 import socket
 import struct
 import threading
@@ -78,13 +79,14 @@ class Communication(threading.Thread):
         if calculate_status:
             if self.data_client is not None:
                 try:
-                    result = struct.pack('i', calculate_result)
+                    # result = struct.pack('i', calculate_result)
+                    result = json.dumps(calculate_result).encode(encoding="utf8")
                     # print(result)
                     self.data_client.send(result)
                     print("计算结果：{}".format(calculate_result))
                     # 用于一次性识别中需要去除之前的数据,例如身份识别，而像认知任务着不需要
                     lock.acquire()
-                    recv_data = None
+                    self.recv_data = None
                     lock.release()
                 except Exception as e:
                     print(e)

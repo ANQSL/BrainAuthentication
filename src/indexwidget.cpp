@@ -126,6 +126,7 @@ void IndexWidget::tabClickSlot(int index)
         this->lastIndex=this->widget->currentIndex();
         this->widget->setCurrentIndex(index-1);
     }
+    emit tabChanged(index);
 }
 
 

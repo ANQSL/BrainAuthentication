@@ -8,6 +8,7 @@ class  AuthorityManage:public QObject
     Q_OBJECT
 public:
     explicit AuthorityManage(QObject *parent=nullptr);
+    QList<int> userPressmission(int);
 signals:
 private:
     void setConnect();

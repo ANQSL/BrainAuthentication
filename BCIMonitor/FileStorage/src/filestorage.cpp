@@ -237,6 +237,7 @@ void FileStorage::init()
     initTimer();
     //初始化配置
     StorageConfig::init();
+    initStorageConfigWidget();
     //获取文件保存目录
     this->dir=StorageConfig::getSavePath();
     this->connect_game_status=StorageConfig::getConnectGameStatus();
@@ -281,4 +282,14 @@ void FileStorage::save()
     filter_eeg_num=0;
     qDebug()<<filter_eeg_num;
 
+}
+
+StorageConfigWidget *FileStorage::getStorageconfigwidget() const
+{
+    return storageconfigwidget;
+}
+
+void FileStorage::initStorageConfigWidget()
+{
+    storageconfigwidget=new StorageConfigWidget;
 }

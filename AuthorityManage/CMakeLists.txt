@@ -20,8 +20,8 @@ file(GLOB src "src/*")
 file(GLOB sql "sql/*.sql")
 set(sql ${sql} CACHE PATH "init database")
 add_library(AuthorityManage ${src})
-target_link_libraries(AuthorityManage  Qt5::Core Qt5::Sql Qt5::Widgets)
+target_link_libraries(AuthorityManage  Qt5::Core Qt5::Widgets Qt5::Sql )
 
 target_compile_definitions(AuthorityManage PRIVATE AUTHORITYMANAGE_LIBRARY)
 
-target_include_directories(AuthorityManage PUBLIC "src")
+target_include_directories(AuthorityManage PUBLIC "src" )

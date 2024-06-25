@@ -3,6 +3,7 @@
 #include "QSqlDatabase"
 #include "QList"
 #include "QVariantList"
+#include "user.h"
 class SQL
 {
 public:
@@ -24,6 +25,7 @@ public:
     QString userName(int id);
     bool addUser(QStringList);
     void cancelUser(int);
+    QList<int> userPressmission(int);
 
 private:
     QSqlDatabase db;

@@ -10,6 +10,7 @@
 #include "processdata.h"
 #include "datacommunicate.h"
 #include "monitortoolbar.h"
+#include "monitorconfigwidget.h"
 using namespace QtCharts;
 QT_BEGIN_NAMESPACE
 namespace Ui { class BCIMonitor; }
@@ -46,7 +47,7 @@ signals:
     //滤波数据
     void filterData(QList<double>);
     //与计算通信
-    void calculateResult(int);
+    void calculateResult(QByteArray);
 private slots:
     void connectAmplifier();
 private:
@@ -96,7 +97,13 @@ private:
     //解码状态
     bool decode_status=false;
 
+    //通信模块
     DataCommunicate *datacommunicate=new DataCommunicate;
+
+    //配置窗口
+    MonitorConfigWidget *monitorConfigWidget;
+
+    void initMonitorConfigWidget();
 
 
 };

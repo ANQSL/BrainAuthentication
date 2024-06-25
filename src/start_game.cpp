@@ -18,7 +18,11 @@ void start_game::addGame(QList<GameData> data)
         QListWidgetItem *item=new QListWidgetItem((*begin).icon,(*begin).name);
         ui->game_list->addItem(item);
     }
-    ui->game_icon->setPixmap(data[0].icon.pixmap(ui->game_icon->size()));
+}
+
+QWidget *start_game::getSSVEPWidget()
+{
+    return ui->ssvep_widget;
 }
 start_game::~start_game()
 {
@@ -28,11 +32,15 @@ start_game::~start_game()
 void start_game::on_game_list_itemPressed(QListWidgetItem *item)
 {
     QIcon icon=item->icon();
-    ui->game_icon->setPixmap(icon.pixmap(ui->game_icon->size()));
 }
 
 
 void start_game::on_start_btn_clicked()
 {
     emit start(0);
+}
+
+void start_game::on_collection_clicked()
+{
+    emit collection();
 }

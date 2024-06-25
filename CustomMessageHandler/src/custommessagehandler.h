@@ -2,6 +2,7 @@
 #define CUSTOMMESSAGEHANDLER_H
 
 #include <QObject>
+#include "log.h"
 class Message:public QObject
 {
     Q_OBJECT
@@ -9,6 +10,8 @@ public:
     void rececive(QtMsgType,QString);
 signals:
     void readyRead(QtMsgType,QString msg);
+private:
+    Log log;
 };
 class CustomMessageHandler : public QObject
 {
@@ -16,7 +19,6 @@ class CustomMessageHandler : public QObject
 public:
     //处理
     static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-
     //重定向QDebug
     static Message* installMessageHandler();
 signals:

@@ -333,7 +333,7 @@ border-radius:6px;</string>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="9,1">
        <item>
-        <widget class="QWidget" name="widget" native="true">
+        <widget class="QWidget" name="ssvep_widget" native="true">
          <property name="minimumSize">
           <size>
            <width>900</width>
@@ -345,12 +345,15 @@ border-radius:6px;</string>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QLabel" name="game_icon">
-           <property name="text">
-            <string/>
+          <widget class="QPushButton" name="collection">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>40</height>
+            </size>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
+           <property name="text">
+            <string>采集</string>
            </property>
           </widget>
          </item>
@@ -369,7 +372,7 @@ border-radius:6px;</string>
             </size>
            </property>
            <property name="text">
-            <string>启动</string>
+            <string>识别</string>
            </property>
           </widget>
          </item>

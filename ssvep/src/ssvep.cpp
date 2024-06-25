@@ -13,7 +13,7 @@
 #define PI acos(-1)
 SSVEP::SSVEP()
 {
-    this->setWindowFlags(Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);
     QtConcurrent::run(this, &SSVEP::readInput);
     connect(this,&SSVEP::newCommand,this,&SSVEP::readCommand);
     initGrayWeight();
@@ -49,8 +49,6 @@ void SSVEP::paintEvent(QPaintEvent *event)
              {
                 display(painter,current_frame);
              }
-
-
              current_frame++;
        }
        else
@@ -360,7 +358,7 @@ void SSVEP::start_display()
        print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
        emit markChanged(marks[current_task_num]+1);
     }
-    emit markChanged(4);
+    emit markChanged(5);
     start_time=QDateTime::currentMSecsSinceEpoch();
     timer->start(16);
 }
@@ -389,20 +387,23 @@ void SSVEP::readInput()
          }
          QThread::usleep(10);
      }
+     qDebug()<<"结束进程";
 }
 
 void SSVEP::readCommand(quint8 command)
 {
       if(command==0)
       {
-          start_display();
+          show();
       }
       if(command==1)
       {
-          show();
+          mode=true;
+          start_display();
       }
       if(command==2)
       {
-          hide();
+          mode=false;
+          start_display();
       }
 }

@@ -2,8 +2,12 @@
 AuthorityManage::AuthorityManage(QObject *parent):QObject(parent)
 {
     setConnect();
-    widget.show();
     initRoleInfo();
+}
+
+QList<int> AuthorityManage::userPressmission(int id)
+{
+    return sql.userPressmission(id);
 }
 
 void AuthorityManage::setConnect()

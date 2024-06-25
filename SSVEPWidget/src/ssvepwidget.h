@@ -12,10 +12,13 @@ public:
     ~SSVEPWidget();
     void start();
     void stop();
-    void display();
+    //1:采集模式，2:识别模式
+    void display(int);
     void show();
     void hide();
     void send(QByteArray);
+    //设置父窗口
+    void setParent(QWidget*);
 private slots:
     void recevice();
 signals:
@@ -29,6 +32,7 @@ private:
     void initProcess();
     static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
     HWND findWindowById(DWORD);
+    bool is_child=false;
 };
 
 #endif // SSVEPWIDGET_H

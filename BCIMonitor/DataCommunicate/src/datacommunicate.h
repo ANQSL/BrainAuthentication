@@ -21,7 +21,7 @@ public:
 public slots:
     void append(QList<double>);
 signals:
-    void result(int);
+    void result(QByteArray);
     void readMark(quint8);
 private:
     quint16 srate;

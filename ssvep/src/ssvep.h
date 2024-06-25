@@ -57,6 +57,7 @@ private:
     // 处理指令
     void readCommand(quint8);
 
+
 };
 
 #endif // SSVEP_H

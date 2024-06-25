@@ -19,6 +19,7 @@ MonitorToolBar::MonitorToolBar(QToolBar *parent)
     nextAction.setIcon(QIcon(":/next.png"));
     pauseAction.setIcon(QIcon(":/pause.png"));
     pluginAction.setIcon(QIcon(":/plugin.png"));
+    settingAction.setIcon(QIcon(":/setting.png"));
     // 设置禁止移动属性,工具栏默认贴在上方
     this->setFloatable(false);
     this->setMovable(false);
@@ -40,6 +41,7 @@ MonitorToolBar::MonitorToolBar(QToolBar *parent)
     this->addAction(&decodeAndEncodeAction);
     this->addAction(&connectAction);
     this->addAction(&pluginAction);
+    this->addAction(&settingAction);
     //设置禁用
     this->disabledAction();
     //设置链接,点击action发送对应的信号
@@ -197,5 +199,9 @@ void MonitorToolBar::initConnect()
     connect(&pluginAction,&QAction::triggered,this,[=](){
         qDebug()<<"设置";
         emit this->pluginSignal();
+    });
+
+    connect(&settingAction,&QAction::triggered,this,[=](){
+        emit this->settingSignal();
     });
 }

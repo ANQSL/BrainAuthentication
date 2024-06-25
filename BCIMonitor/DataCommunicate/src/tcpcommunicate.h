@@ -13,7 +13,7 @@ public:
     void stop();
     void send(double *data,quint16 data_len);
 signals:
-    void result(int);
+    void result(QByteArray);
     void readMark(quint8);
 private:
     //数据端口

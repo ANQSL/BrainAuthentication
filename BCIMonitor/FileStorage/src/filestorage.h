@@ -6,6 +6,7 @@
 //#include "txtstorage.h"
 //#include "csvstorage.h"
 #include "QThread"
+#include "storageconfigwidget.h"
 class FileStorage:public QObject
 {
     Q_OBJECT
@@ -17,6 +18,8 @@ public:
     void creatFile(QString);
     //插入事件
     void appendEvent(int);
+    StorageConfigWidget *getStorageconfigwidget() const;
+
 public slots:
     //开始
     void start();
@@ -95,6 +98,10 @@ private:
 
     //保存模式，0：定时器保存，1：采样率保存，默认1
     unsigned short int mode;
+
+    //配置窗口
+    StorageConfigWidget *storageconfigwidget;
+    void initStorageConfigWidget();
 signals:
     void storageSignal(double*,int num);
     void setNameSignal(QString);

@@ -11,6 +11,7 @@
 #include "indexwidget.h"
 #include "start_game.h"
 #include "calculatetest.h"
+#include "authoritymanage.h"
 class BASSVEP : public QObject
 {
     Q_OBJECT
@@ -43,8 +44,15 @@ private:
     void initTaskWidget();
 
 
+    //权限管理
+    AuthorityManage authority_manage;
     //算法验证
     CalculateTest calculate_test;
+
+    //用户
+    User user;
+    //登录次数
+    quint8 login_time=0;
 
 
 };
