@@ -8,6 +8,7 @@
 #include "timer.h"
 #include "communication.h"
 #include "QSocketNotifier"
+#include "receivecommandtask.h"
 class SSVEP:public QOpenGLWidget
 {
     Q_OBJECT
@@ -51,11 +52,12 @@ private:
     void start_display();
 
     //进程通信
-    void readInput();
-    //读取进程状态
-    bool read_status=true;
+    ReceiveCommandTask *receivce_command_task;
+    void initReceiveCommandTask();
     // 处理指令
     void readCommand(quint8);
+
+    bool running_status=false;
 
 
 };

@@ -32,6 +32,8 @@ public:
     void showPluginWidget();
     void setDecodeStatus(bool);
     void clearFilter();
+    bool getStatus() const;
+
 private slots:
     void loadPluginStatus(bool);
 
@@ -64,6 +66,9 @@ private:
 
     //连接标志
     bool connect_status=false;
+
+    //采集器状态
+    bool status=false;
 };
 
 #endif // AMPLIFIER_H

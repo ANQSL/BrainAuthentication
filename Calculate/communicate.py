@@ -27,7 +27,7 @@ class Communication(threading.Thread):
         self.recv_data = None
         # 命令服务端口
         self.command_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.command_server.bind(("", 8888))
+        self.command_server.bind(("", 7778))
         self.command_server.setblocking(False)
         self.command_server.listen(1)
         self.command_client = None
@@ -109,6 +109,7 @@ class Communication(threading.Thread):
         else:
             try:
                 self.command_client, _ = self.command_server.accept()
+                self.recv_data = None
                 print("采集连接")
             except Exception as e:
                 print("没有连接")

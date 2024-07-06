@@ -37,6 +37,7 @@ class Calculate(threading.Thread):
                 # 计算
                 start_time = time.time()
                 result = self.inference.infer(data, True)
+                print(result)
                 communicate.calculate_result = {"id": result["id"], "count": result["count"]}
                 # 计算结束
                 print("计算结束")

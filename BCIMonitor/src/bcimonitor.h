@@ -21,8 +21,11 @@ class BCIMonitor : public QMainWindow
 public:
     BCIMonitor(QWidget *parent = nullptr);
     ~BCIMonitor();
+    //连接服务器
+    void connectHost();
     //开始传输数据
     void startDataTransmit();
+
 public slots:
     //存储
     void setFileMsg(QString,int);

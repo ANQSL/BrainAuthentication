@@ -20,9 +20,13 @@ SSVEPWidget::~SSVEPWidget()
 
 void SSVEPWidget::start()
 {
-    ssvep_process->start("D:/project/BrainAuthentication/build-ssvep-Desktop_Qt_5_14_2_MSVC2017_32bit-Debug/test/ssvep_test.exe");
+    ssvep_process->start("ssvep_test.exe");
     connect(ssvep_process,&QProcess::readyReadStandardOutput,this,&SSVEPWidget::recevice);
+    connect(ssvep_process,&QProcess::errorOccurred,this,[=](QProcess::ProcessError error){
+        qDebug()<<error;
+    });
 }
+
 
 void SSVEPWidget::stop()
 {
@@ -37,6 +41,10 @@ void SSVEPWidget::display(int model)
 }
 void SSVEPWidget::show()
 {
+    if(ssvep_process->state()!=QProcess::Running)
+    {
+        start();
+    }
     QByteArray command;
     command.append(char(0));
     send(command);

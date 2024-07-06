@@ -10,6 +10,11 @@ QList<int> AuthorityManage::userPressmission(int id)
     return sql.userPressmission(id);
 }
 
+QString AuthorityManage::getUserName(int id)
+{
+    return sql.userName(id);
+}
+
 void AuthorityManage::setConnect()
 {
     connect(&widget,&ManageWidget::currentRole,this,&AuthorityManage::initRoleInfo);

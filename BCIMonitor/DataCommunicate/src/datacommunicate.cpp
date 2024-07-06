@@ -7,7 +7,6 @@ DataCommunicate::DataCommunicate(QObject *parent) : QObject(parent)
     buffer_data_size=0;
 
     initCommunicate();
-    buildConnection();
 }
 
 DataCommunicate::~DataCommunicate()

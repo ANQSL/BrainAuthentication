@@ -14,29 +14,30 @@
 SSVEP::SSVEP()
 {
     this->setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);
-    QtConcurrent::run(this, &SSVEP::readInput);
-    connect(this,&SSVEP::newCommand,this,&SSVEP::readCommand);
     initGrayWeight();
     initTimer();
     initMarks();
     initCommunication();
     this->resize(1600,800);
     initFrames();
+    initReceiveCommandTask();
+    connect(receivce_command_task,&ReceiveCommandTask::newCommand,this,&SSVEP::readCommand);
 }
 SSVEP::~SSVEP()
 {
     delete communication;
     timer->stop();
-    read_status=false;
     QThread::usleep(50);
+    receivce_command_task->stop();
     delete timer;
+    delete receivce_command_task;
 }
 void SSVEP::paintEvent(QPaintEvent *event)
 {
     if(type)
     {
        quint64 end_time=QDateTime::currentMSecsSinceEpoch();
-       if((end_time-start_time)<=5000)
+       if(((end_time-start_time)<=5000)&&current_frame<frame_num)
        {
              QPainter painter(this);
 //             painter.drawPixmap(this->rect(),frames[current_frame]);
@@ -50,10 +51,15 @@ void SSVEP::paintEvent(QPaintEvent *event)
                 display(painter,current_frame);
              }
              current_frame++;
+             if(current_frame>300)
+             {
+                 qDebug()<<"CPU卡顿";
+             }
        }
        else
        {
            timer->stop();
+           running_status=false;
            print("开销时间为："+QString::number(QDateTime::currentMSecsSinceEpoch()-start_time));
            current_frame=0;
            type=false;
@@ -72,17 +78,18 @@ void SSVEP::paintEvent(QPaintEvent *event)
 }
 void SSVEP::keyPressEvent(QKeyEvent *event)
 {
-    communication->connectAmplifier();
-    type=true;
-    print("第"+QString::number(current_task_num+1)+"次任务");
-    if(mode)
-    {
-//       initFrames(marks[current_task_num]);
-       print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
-       emit markChanged(marks[current_task_num]+1);
-    }
-    start_time=QDateTime::currentMSecsSinceEpoch();
-    timer->start(16);
+    start_display();
+//    communication->connectAmplifier();
+//    type=true;
+//    print("第"+QString::number(current_task_num+1)+"次任务");
+//    if(mode)
+//    {
+////       initFrames(marks[current_task_num]);
+//       print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
+//       emit markChanged(marks[current_task_num]+1);
+//    }
+//    start_time=QDateTime::currentMSecsSinceEpoch();
+//    timer->start(16);
 }
 
 void SSVEP::drawArrows(QPainter &painter,int x, int y, QColor color,Direction m_direction)
@@ -349,47 +356,33 @@ void SSVEP::initFrames()
 }
 void SSVEP::start_display()
 {
-    communication->connectAmplifier();
-    type=true;
-    print("第"+QString::number(current_task_num+1)+"次任务");
-    if(mode)
+    if(!running_status)
     {
-       initFrames(marks[current_task_num]);
-       print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
-       emit markChanged(marks[current_task_num]+1);
+        communication->connectAmplifier();
+        type=true;
+        print("第"+QString::number(current_task_num+1)+"次任务");
+        if(mode)
+        {
+           initFrames(marks[current_task_num]);
+           print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
+           emit markChanged(marks[current_task_num]+1);
+        }
+        else
+        {
+    //       emit markChanged(5);
+        }
+        start_time=QDateTime::currentMSecsSinceEpoch();
+        running_status=true;
+        timer->start(16);
     }
-    emit markChanged(5);
-    start_time=QDateTime::currentMSecsSinceEpoch();
-    timer->start(16);
+
 }
 
-void SSVEP::readInput()
+void SSVEP::initReceiveCommandTask()
 {
-     char chBuf[4096];
-     DWORD dwRead;
-     HANDLE hStdinDup;
-
-     const HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-     if (hStdin == INVALID_HANDLE_VALUE)
-         return;
-
-     DuplicateHandle(GetCurrentProcess(), hStdin,
-                     GetCurrentProcess(), &hStdinDup,
-                     0, false, DUPLICATE_SAME_ACCESS);
-
-     CloseHandle(hStdin);
-     while (read_status) {
-         bool ok = ReadFile(hStdinDup, chBuf, sizeof(chBuf), &dwRead, NULL);
-         // emit sig_log(QLatin1String("ok is:")+QString::number(ok));
-         if (ok && dwRead != 0)
-         {
-              emit newCommand(chBuf[0]);
-         }
-         QThread::usleep(10);
-     }
-     qDebug()<<"结束进程";
+    receivce_command_task=new ReceiveCommandTask;
+    receivce_command_task->start();
 }
-
 void SSVEP::readCommand(quint8 command)
 {
       if(command==0)

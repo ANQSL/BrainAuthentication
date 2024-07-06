@@ -22,6 +22,11 @@ BCIMonitor::~BCIMonitor()
     delete monitorConfigWidget;
 }
 
+void BCIMonitor::connectHost()
+{
+    datacommunicate->buildConnection();
+}
+
 void BCIMonitor::startDataTransmit()
 {
     datacommunicate->start();
@@ -102,10 +107,14 @@ void BCIMonitor::appendMarkCutHit(QMap<QString, QString> map)
 void BCIMonitor::appendMark(quint8 type)
 {
 //    qDebug()<<"当前时间戳"<<QDateTime::currentMSecsSinceEpoch();
-    curvegroup->appendMark(QString(type));
-    qDebug()<<"接收mark为:"<<type;
-    filestorage->appendEvent(type);
-    emit markChanged(type);
+    if(amplifier->getStatus())
+    {
+        curvegroup->appendMark(QString(type));
+        qDebug()<<"接收mark为:"<<type;
+        filestorage->appendEvent(type);
+        emit markChanged(type);
+    }
+
 }
 void BCIMonitor::init()
 {

@@ -50,14 +50,14 @@ void CalculateTest::appendSSVEP(int id)
 void CalculateTest::appendRecognition(int id)
 {
    qDebug()<<"识别id"<<id;
-   recognition_id=id;
+//   recognition_id=id;
    recognition_status=true;
 //   if(ssvep_status)
 //   {
 //       verify();
 //   }
     recognition_num++;
-    if(this->recognition_id==recognition_id)
+    if(this->recognition_id==id)
     {
         recognition_correct++;
     }

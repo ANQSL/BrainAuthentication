@@ -23,17 +23,20 @@ Amplifier::~Amplifier()
 }
 void Amplifier::start()
 {
+    status=true;
     amplifierdevice->start();
     datathread->setStatus(true);
 }
 
 void Amplifier::pause()
 {
+    status=false;
     stop();
 }
 
 void Amplifier::stop()
 {
+    status=false;
     amplifierdevice->stop();
     datathread->setStatus(false);
 }
@@ -201,4 +204,9 @@ void Amplifier::initPluginWidget()
     connect(pluginwidget,&PluginWidget::loadPlugin,pluginmanage,&PluginManage::loadPlugin);
     connect(pluginmanage,&PluginManage::error,this,&Amplifier::loadPluginStatus);
     pluginmanage->loadPluginInfo();
+}
+
+bool Amplifier::getStatus() const
+{
+    return status;
 }

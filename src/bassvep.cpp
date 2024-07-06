@@ -17,6 +17,7 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
     });
     connect(cca,&CCA::result,controlfly,&ControlFly::command);
     connect(taskwidget,&start_game::start,this,[=](){
+        bcimonitor->connectHost();
         QTimer::singleShot(1000,[=](){
             ssvep_widget->display(1);
             cca->start();
@@ -41,21 +42,22 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
         QString result(data);
         result=result.replace("}","");
         result=result.replace(" ","");
-        int id=result.split(",")[0].split(":")[0].toInt();
+        int id=result.split(",")[0].split(":")[1].toInt();
         int count=result.split(",")[1].split(":")[1].toInt();
         if(id==-1)
         {
             //登录失败
             CustomMessageBox::show(NULL,"登录失败");
+            calculate_test.appendRecognition(id);
             qDebug()<<QString("MsgType=test,data=登录失败");
         }
-        else if(count>=100)
+        else if(count>=70)
         {
             //登录成功
             login_time=0;
-            CustomMessageBox::show(NULL,"登录成功");
+            CustomMessageBox::show(NULL,"欢迎"+authority_manage.getUserName(id)+"进入本系统");
             calculate_test.appendRecognition(id);
-            qDebug()<<QString("MsgType=test,data=登录成功 id=%1").arg(id);
+//            qDebug()<<QString("MsgType=test,data=登录成功 id=%1").arg(id);
         }
         else
         {
@@ -66,6 +68,7 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
                 //登录失败
                 login_time=0;
                 CustomMessageBox::show(NULL,"失败三次,登录失败");
+                calculate_test.appendRecognition(-1);
                 qDebug()<<QString("MsgType=test,data=登录失败");
             }
             else

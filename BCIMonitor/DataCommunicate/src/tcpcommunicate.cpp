@@ -28,8 +28,6 @@ void TcpCommunicate::start()
         socket->connectToHost("127.0.0.1",7777);
         socket->waitForConnected();
     }
-    //开始mark服务
-    mark_server->listen(QHostAddress::Any,8888);
 }
 
 void TcpCommunicate::stop()
@@ -89,6 +87,8 @@ void TcpCommunicate::init()
              setMarkSocketConnect();
         }
     });
+    //开始mark服务
+    mark_server->listen(QHostAddress::Any,8888);
 
 }
 
@@ -100,6 +100,7 @@ void TcpCommunicate::setSocketConnect()
 //    });
     connect(socket,&QTcpSocket::readyRead,this,[=](){
        QByteArray data=socket->readAll();
+       socket->disconnectFromHost();
 //       qDebug()<<QString(data);
        emit result(data);
     });
