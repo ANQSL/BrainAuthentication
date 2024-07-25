@@ -10,6 +10,7 @@ public:
     explicit AuthorityManage(QObject *parent=nullptr);
     QList<int> userPressmission(int);
     QString getUserName(int);
+    QStringList getUserInfo(int);
 signals:
 private:
     void setConnect();

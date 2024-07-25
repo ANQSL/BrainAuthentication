@@ -12,6 +12,7 @@
 #include "start_game.h"
 #include "calculatetest.h"
 #include "authoritymanage.h"
+#include "blinkrecognition.h"
 class BASSVEP : public QObject
 {
     Q_OBJECT
@@ -26,6 +27,9 @@ private:
     //cca算法
     CCA *cca;
     void initCCA();
+    //眨眼信号识别
+    BlinkRecognition *blink_recognition;
+    void initBlinkRecognition();
     //采集器
     BCIMonitor *bcimonitor;
     void initBCIMonitor();

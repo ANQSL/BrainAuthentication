@@ -23,6 +23,7 @@ public:
     QVariantList UserInfo();
     QVariantList UserRoleInfo(int user_id);
     QString userName(int id);
+    QStringList userInfo(int id);
     bool addUser(QStringList);
     void cancelUser(int);
     QList<int> userPressmission(int);

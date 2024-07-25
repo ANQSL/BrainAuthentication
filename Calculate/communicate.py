@@ -108,8 +108,10 @@ class Communication(threading.Thread):
                     self.command_client = None
         else:
             try:
+                global recv_data
                 self.command_client, _ = self.command_server.accept()
                 self.recv_data = None
+                recv_data = None
                 print("采集连接")
             except Exception as e:
                 print("没有连接")

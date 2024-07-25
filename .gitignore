@@ -6,3 +6,6 @@ CMakeLists.txt.*
 build*/
 .idea/
 ssvep_data/
+release/
+*.mat
+SSVEP_FLY_4index/

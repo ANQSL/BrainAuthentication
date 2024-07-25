@@ -113,6 +113,7 @@ void BCIMonitor::appendMark(quint8 type)
         qDebug()<<"接收mark为:"<<type;
         filestorage->appendEvent(type);
         emit markChanged(type);
+        startDataTransmit();
     }
 
 }

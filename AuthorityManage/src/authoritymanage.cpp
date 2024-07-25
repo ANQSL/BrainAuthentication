@@ -15,6 +15,11 @@ QString AuthorityManage::getUserName(int id)
     return sql.userName(id);
 }
 
+QStringList AuthorityManage::getUserInfo(int id)
+{
+    return sql.userInfo(id);
+}
+
 void AuthorityManage::setConnect()
 {
     connect(&widget,&ManageWidget::currentRole,this,&AuthorityManage::initRoleInfo);

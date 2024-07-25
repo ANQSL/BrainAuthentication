@@ -4,6 +4,7 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
 {
     CustomMessageHandler::installMessageHandler();
     initCCA();
+    initBlinkRecognition();
     initBCIMonitor();
     initFilter();
     initControlFly();
@@ -14,6 +15,11 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
     connect(bcimonitor,&BCIMonitor::filterData,this,[=](QList<double> data){
         data=filter->filter(data);
         cca->append(data);
+        bool isok=blink_recognition->recognition(data[0]);
+        if(isok)
+        {
+            qDebug()<<"眨眼识别成功";
+        }
     });
     connect(cca,&CCA::result,controlfly,&ControlFly::command);
     connect(taskwidget,&start_game::start,this,[=](){
@@ -21,8 +27,8 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
         QTimer::singleShot(1000,[=](){
             ssvep_widget->display(1);
             cca->start();
-            bcimonitor->startDataTransmit();
         });
+        blink_recognition->start();
 
     });
     connect(taskwidget,&start_game::collection,this,[=](){
@@ -47,15 +53,19 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
         if(id==-1)
         {
             //登录失败
+            login_time=0;
             CustomMessageBox::show(NULL,"登录失败");
             calculate_test.appendRecognition(id);
             qDebug()<<QString("MsgType=test,data=登录失败");
         }
-        else if(count>=70)
+        else if(count>=30)
         {
             //登录成功
             login_time=0;
-            CustomMessageBox::show(NULL,"欢迎"+authority_manage.getUserName(id)+"进入本系统");
+            QStringList info=authority_manage.getUserInfo(id);
+//            CustomMessageBox::show(NULL,"欢迎"+authority_manage.getUserName(id)+"进入本系统");
+            qDebug()<<info;
+            CustomMessageBox::show(NULL,"欢迎"+info[0]+"进入本系统",info[1]);
             calculate_test.appendRecognition(id);
 //            qDebug()<<QString("MsgType=test,data=登录成功 id=%1").arg(id);
         }
@@ -139,4 +149,9 @@ void BASSVEP::initTaskWidget()
 void BASSVEP::initCCA()
 {
     cca=new CCA;
+}
+
+void BASSVEP::initBlinkRecognition()
+{
+    blink_recognition=new BlinkRecognition;
 }

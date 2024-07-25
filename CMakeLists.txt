@@ -20,6 +20,7 @@ endif()
 #添加模块
 add_subdirectory(BCIMonitor)
 add_subdirectory(CCA)
+add_subdirectory(Blink)
 add_subdirectory(DataProcess)
 add_subdirectory(ControlFly)
 add_subdirectory(SSVEPWidget)
@@ -39,7 +40,7 @@ file(GLOB SRC "src/*")
 
 add_executable(${PROJECT_NAME} WIN32 main.cpp ${SRC}  ${MonitorRes} ${AmpliferRes})
 target_link_libraries(${PROJECT_NAME}  Qt5::Widgets)
-target_link_libraries(${PROJECT_NAME}  BCIMonitor CCA DataProcess ControlFly SSVEPWidget
+target_link_libraries(${PROJECT_NAME}  BCIMonitor CCA  Blink DataProcess ControlFly SSVEPWidget
                       CustomMessageHandler CalculateTest AuthorityManage)
 
 target_include_directories(${PROJECT_NAME} PUBLIC src)

@@ -233,6 +233,22 @@ QString SQL::userName(int id)
     return name;
 }
 
+QStringList SQL::userInfo(int id)
+{
+    QStringList info;
+    QString sql=QString("select  name,photo from user where id=%1").arg(id);
+    QSqlQuery query;
+    if(query.exec(sql))
+    {
+        while (query.next()) {
+            info.append(query.value(0).toString());
+            info.append(query.value(1).toString());
+            break;
+        }
+    }
+    return info;
+}
+
 bool SQL::addUser(QStringList data)
 {
     QString name;

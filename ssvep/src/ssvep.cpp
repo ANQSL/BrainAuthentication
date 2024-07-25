@@ -13,7 +13,7 @@
 #define PI acos(-1)
 SSVEP::SSVEP()
 {
-    this->setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::FramelessWindowHint);
     initGrayWeight();
     initTimer();
     initMarks();

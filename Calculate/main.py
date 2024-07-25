@@ -1,5 +1,5 @@
 import sys
-
+from scipy import io
 sys.path.append("D:\\project\\BrainAuthentication\\Calculate\\identity_recognition")
 from calculate import Calculate
 from communicate import Communication
