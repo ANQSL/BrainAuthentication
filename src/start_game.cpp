@@ -16,7 +16,7 @@ void start_game::addGame(QList<GameData> data)
     for(QList<GameData>::iterator begin=data.begin();begin!=data.end();begin++)
     {
         QListWidgetItem *item=new QListWidgetItem((*begin).icon,(*begin).name);
-        ui->game_list->addItem(item);
+//        ui->game_list->addItem(item);
     }
 }
 

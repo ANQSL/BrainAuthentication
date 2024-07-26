@@ -25,6 +25,7 @@ void CustomMessageBox::show(QWidget *parent, QString message)
 void CustomMessageBox::show(QWidget *parent, QString message,QString photo)
 {
     widget=new QWidget(parent);
+    widget->setFixedSize(200,350);
     widget->setAttribute(Qt::WA_TranslucentBackground);
     widget->setWindowFlag(Qt::FramelessWindowHint);
     label=new QLabel;
@@ -44,7 +45,8 @@ void CustomMessageBox::show(QWidget *parent, QString message,QString photo)
     pixmap.load(photo);
     Photo->setPixmap(pixmap);
     widget->show();
-    QTimer::singleShot(1000,[=](){
+//    widget->move((parent->width() - widget->width())/2,(parent->height() - widget->height())/2);
+    QTimer::singleShot(1500,[=](){
         widget->hide();
         delete label;
         delete layout;

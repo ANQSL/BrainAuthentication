@@ -1,5 +1,5 @@
 #include "blinkrecognition.h"
-
+#include "iostream"
 BlinkRecognition::BlinkRecognition()
 {
     running_status=false;
@@ -7,10 +7,11 @@ BlinkRecognition::BlinkRecognition()
     p=0;
 
     baseline=0;
+    blink_threshold=100;
 
     sum=0;
     init_count=2000;
-    eog_threshold=200;
+    eog_threshold=60;
     dynamic_count=160;
     discard_count=280;
     current_count=0;
@@ -62,7 +63,7 @@ void BlinkRecognition::dynamicThreshlod(double value)
             if(current_count-discard_count==dynamic_count)
             {
                 baseline=sum/current_count;
-                blink_threshold=baseline+eog_threshold;
+                _blink_threshold=baseline+eog_threshold;
                 status=Recogniton;
                 current_count=0;
                 sum=0;
@@ -72,10 +73,10 @@ void BlinkRecognition::dynamicThreshlod(double value)
 }
 bool BlinkRecognition::normalization(double value)
 {
-    if(value>blink_threshold)
+    if(value>blink_threshold&&value<(blink_threshold+30))
     {
         count++;
-        if(count==120)
+        if(count==30)
         {
            count=0;
            p++;

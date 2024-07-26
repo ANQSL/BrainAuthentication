@@ -71,7 +71,7 @@ void SSVEPWidget::setParent(QWidget *parent)
         if (hwnd) {
             SetParent(hwnd, (HWND)parent->winId());
             SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_POPUP | WS_CHILD);
-            SetWindowPos(hwnd, HWND_TOP, 0, 0, 1500,800, SWP_SHOWWINDOW);
+            SetWindowPos(hwnd, HWND_TOP, 0, 0, parent->width(),parent->height(), SWP_SHOWWINDOW);
             is_child=!is_child;
         } else {
            qDebug() << "Failed to find window for PID:" << pid;

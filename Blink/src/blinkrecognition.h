@@ -17,7 +17,7 @@ private:
     void dynamicThreshlod(double);
     bool normalization(double);
     unsigned int count,p,x[1025];
-    int blink_threshold,baseline,eog_threshold;
+    int _blink_threshold,blink_threshold,baseline,eog_threshold;
     Status status;
 
     //动态阈值的属性
