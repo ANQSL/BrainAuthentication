@@ -3,12 +3,11 @@
 
 class BlinkRecognition
 {
-    typedef enum
-    {
+    typedef enum{
         InIt=0,
-        Threshold,
-        Recogniton
-    }Status;
+        Normal,
+        Update
+    }ThreshlodStatus;
 public:
     BlinkRecognition();
     bool recognition(double);
@@ -18,7 +17,8 @@ private:
     bool normalization(double);
     unsigned int count,p,x[1025];
     int _blink_threshold,blink_threshold,baseline,eog_threshold;
-    Status status;
+
+    ThreshlodStatus threshlod_status;
 
     //动态阈值的属性
     double sum;
@@ -26,8 +26,8 @@ private:
     int dynamic_count;
     int discard_count;
     int current_count;
-
     bool running_status;
+
 
 };
 

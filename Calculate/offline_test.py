@@ -11,9 +11,7 @@ config_path = "identity_recognition/config/config_mat.yaml"
 cfg_file = open(config_path, 'r')
 cfg = yaml.safe_load(cfg_file)
 inference = Inference(cfg)
-
 # 计算端数据
-
 flies = os.listdir("real_time_data")
 cal_result = []
 for file in flies:
@@ -44,3 +42,4 @@ print("计算端计算结果")
 print(cal_result)
 print("采集端计算结果")
 print(result)
+

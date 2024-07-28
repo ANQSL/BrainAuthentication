@@ -3,6 +3,7 @@
 BlinkRecognition::BlinkRecognition()
 {
     running_status=false;
+    threshlod_status=InIt;
     count=0;
     p=0;
 
@@ -11,26 +12,19 @@ BlinkRecognition::BlinkRecognition()
 
     sum=0;
     init_count=2000;
-    eog_threshold=60;
-    dynamic_count=160;
-    discard_count=280;
+    eog_threshold=70;
+    dynamic_count=100;
+    discard_count=200;
     current_count=0;
-
-    status=InIt;
 }
 
 bool BlinkRecognition::recognition(double value)
 {
     if(running_status)
     {
-        if(status==Recogniton)
-        {
-            return normalization(value);
-        }
-        if(status==Threshold||status==InIt)
-        {
-            dynamicThreshlod(value);
-        }
+        dynamicThreshlod(value);
+        return normalization(value);
+
     }
     return false;
 }
@@ -43,19 +37,19 @@ void BlinkRecognition::dynamicThreshlod(double value)
 {
 
     current_count++;
-    if(status==InIt)
+    if(threshlod_status==InIt)
     {
         sum+=value;
         if(init_count==current_count)
         {
             baseline=sum/current_count;
             blink_threshold=baseline+eog_threshold;
-            status=Recogniton;
+            threshlod_status=Normal;
             current_count=0;
             sum=0;
         }
     }
-    else
+    else if(threshlod_status==Update)
     {
         if(current_count-discard_count>=0)
         {
@@ -64,7 +58,7 @@ void BlinkRecognition::dynamicThreshlod(double value)
             {
                 baseline=sum/current_count;
                 _blink_threshold=baseline+eog_threshold;
-                status=Recogniton;
+                threshlod_status=Normal;
                 current_count=0;
                 sum=0;
             }
@@ -73,10 +67,11 @@ void BlinkRecognition::dynamicThreshlod(double value)
 }
 bool BlinkRecognition::normalization(double value)
 {
-    if(value>blink_threshold&&value<(blink_threshold+30))
+
+    if(value>blink_threshold&&value<(blink_threshold+50)&&threshlod_status==Normal)
     {
         count++;
-        if(count==30)
+        if(count==40)
         {
            count=0;
            p++;
@@ -89,6 +84,13 @@ bool BlinkRecognition::normalization(double value)
                    p=0;
                    x[p]=0;
                }
+               current_count=0;
+               sum=0;
+               static int time=1;
+
+               std::cout<<"current blink_threshold is:"<<blink_threshold<<std::endl;
+               std::cout<<"this is"<<time<<"";
+               time++;
                return true;
            }
            else
@@ -105,7 +107,7 @@ bool BlinkRecognition::normalization(double value)
         int dx=x[p]-x[p-1];
         if(dx<0)
         {
-           status=Threshold;
+           threshlod_status=Update;
         }
         if(p>1024)
         {
