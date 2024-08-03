@@ -9,3 +9,4 @@ ssvep_data/
 release/
 *.mat
 SSVEP_FLY_4index/
+fear_data/

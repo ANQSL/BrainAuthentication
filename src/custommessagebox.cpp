@@ -25,13 +25,13 @@ void CustomMessageBox::show(QWidget *parent, QString message)
 void CustomMessageBox::show(QWidget *parent, QString message,QString photo)
 {
     widget=new QWidget(parent);
-    widget->setFixedSize(200,350);
+    widget->setFixedSize(600,650);
     widget->setAttribute(Qt::WA_TranslucentBackground);
     widget->setWindowFlag(Qt::FramelessWindowHint);
     label=new QLabel;
     Photo=new QLabel;
     QVBoxLayout *layout=new QVBoxLayout;
-    layout->addWidget(Photo,4,Qt::AlignCenter);
+    layout->addWidget(Photo,5,Qt::AlignCenter);
     layout->addWidget(label,1,Qt::AlignCenter);
     widget->setLayout(layout);
     label->setText(message);
@@ -43,6 +43,7 @@ void CustomMessageBox::show(QWidget *parent, QString message,QString photo)
     label->setAttribute(Qt::WA_TranslucentBackground);
     QPixmap pixmap;
     pixmap.load(photo);
+    pixmap=pixmap.scaled(Photo->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     Photo->setPixmap(pixmap);
     widget->show();
 //    widget->move((parent->width() - widget->width())/2,(parent->height() - widget->height())/2);

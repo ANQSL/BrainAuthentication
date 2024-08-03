@@ -18,6 +18,8 @@ public:
 
     void buildConnection();
     void disconnection();
+    bool getRecvStatus();
+    void setRecvStatus(bool status);
 public slots:
     void append(QList<double>);
 signals:
@@ -36,6 +38,9 @@ private:
     bool send_status=false;
 
     int send_time=0;
+    //结果接收标志
+    bool recv_status=true;
+
 
 };
 

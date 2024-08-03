@@ -82,6 +82,16 @@ void DataCommunicate::disconnection()
     this->communicate->stop();
 }
 
+bool DataCommunicate::getRecvStatus()
+{
+    return recv_status;
+}
+
+void DataCommunicate::setRecvStatus(bool status)
+{
+    recv_status=status;
+}
+
 void DataCommunicate::initCommunicate()
 {
     communicate=new TcpCommunicate;
@@ -89,6 +99,7 @@ void DataCommunicate::initCommunicate()
     {
         send_status=!send_status;
         send_time=0;
+        recv_status=true;
         emit result(value);
     });
     connect(communicate,&TcpCommunicate::readMark,this,&DataCommunicate::readMark);

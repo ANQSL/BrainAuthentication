@@ -11,10 +11,10 @@ BlinkRecognition::BlinkRecognition()
     blink_threshold=100;
 
     sum=0;
-    init_count=2000;
+    init_count=500;
     eog_threshold=70;
-    dynamic_count=100;
-    discard_count=200;
+    dynamic_count=500;
+    discard_count=500;
     current_count=0;
 }
 
@@ -32,6 +32,12 @@ bool BlinkRecognition::recognition(double value)
 void BlinkRecognition::start()
 {
     running_status=true;
+    threshlod_status=InIt;
+}
+
+void BlinkRecognition::stop()
+{
+    running_status=false;
 }
 void BlinkRecognition::dynamicThreshlod(double value)
 {
@@ -57,7 +63,7 @@ void BlinkRecognition::dynamicThreshlod(double value)
             if(current_count-discard_count==dynamic_count)
             {
                 baseline=sum/current_count;
-                _blink_threshold=baseline+eog_threshold;
+                blink_threshold=baseline+eog_threshold;
                 threshlod_status=Normal;
                 current_count=0;
                 sum=0;
@@ -68,7 +74,7 @@ void BlinkRecognition::dynamicThreshlod(double value)
 bool BlinkRecognition::normalization(double value)
 {
 
-    if(value>blink_threshold&&value<(blink_threshold+50)&&threshlod_status==Normal)
+    if(value>blink_threshold&&threshlod_status==Normal)
     {
         count++;
         if(count==40)

@@ -12,6 +12,7 @@ public:
     BlinkRecognition();
     bool recognition(double);
     void start();
+    void stop();
 private:
     void dynamicThreshlod(double);
     bool normalization(double);

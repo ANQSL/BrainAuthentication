@@ -13,7 +13,7 @@
 #define PI acos(-1)
 SSVEP::SSVEP()
 {
-    this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);
     initGrayWeight();
     initTimer();
     initMarks();
@@ -308,7 +308,7 @@ void SSVEP::initTimer()
 void SSVEP::initMarks()
 {
     marks.clear();
-    for(int i=0;i<4;i++)
+    for(int i=0;i<1;i++)
     {
         for(int j=0;j<1;j++)
         {
@@ -363,7 +363,7 @@ void SSVEP::start_display()
         print("第"+QString::number(current_task_num+1)+"次任务");
         if(mode)
         {
-           initFrames(marks[current_task_num]);
+//           initFrames(marks[current_task_num]);
            print("当前频率："+QString::number(config.filckerFrep[marks[current_task_num]].toFloat()));
            emit markChanged(marks[current_task_num]+1);
         }

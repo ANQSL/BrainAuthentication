@@ -31,6 +31,16 @@ void BCIMonitor::startDataTransmit()
 {
     datacommunicate->start();
 }
+
+bool BCIMonitor::getRecvStatus()
+{
+    return datacommunicate->getRecvStatus();
+}
+
+void BCIMonitor::setRecvStatus(bool status)
+{
+    datacommunicate->setRecvStatus(status);
+}
 void BCIMonitor::connectAmplifier()
 {
     QWidget *connectwidget=amplifier->getConnectWidget();

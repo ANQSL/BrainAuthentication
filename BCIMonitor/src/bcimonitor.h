@@ -26,6 +26,9 @@ public:
     //开始传输数据
     void startDataTransmit();
 
+    bool getRecvStatus();
+    void setRecvStatus(bool status);
+
 public slots:
     //存储
     void setFileMsg(QString,int);

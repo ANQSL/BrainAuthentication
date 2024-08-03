@@ -16,18 +16,23 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
         data=filter->filter(data);
         cca->append(data);
         bool isok=blink_recognition->recognition(data[0]);
-        if(isok)
+        if(isok&&bcimonitor->getRecvStatus())
         {
-            qDebug()<<"眨眼识别成功";
+            blink_recognition->stop();
+            bcimonitor->connectHost();
+            QTimer::singleShot(1000,[=](){
+                ssvep_widget->display(1);
+                cca->start();
+            });
         }
     });
     connect(cca,&CCA::result,controlfly,&ControlFly::command);
     connect(taskwidget,&start_game::start,this,[=](){
-        bcimonitor->connectHost();
-        QTimer::singleShot(1000,[=](){
-            ssvep_widget->display(1);
-            cca->start();
-        });
+//        bcimonitor->connectHost();
+//        QTimer::singleShot(1000,[=](){
+//            ssvep_widget->display(1);
+//            cca->start();
+//        });
         blink_recognition->start();
 
     });

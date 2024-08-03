@@ -7,7 +7,7 @@ import yaml
 
 from identity_recognition.infer import Inference
 
-config_path = "identity_recognition/config/config_mat.yaml"
+config_path = "../../MetaBCI/BCISystem/config/config_mat.yaml"
 cfg_file = open(config_path, 'r')
 cfg = yaml.safe_load(cfg_file)
 inference = Inference(cfg)
