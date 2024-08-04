@@ -1,6 +1,6 @@
 #include "bassvep.h"
 #include "custommessagebox.h"
-BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
+BASSVEP::BASSVEP(QObject *parent) : QObject(parent),bite_teeth_recognition(32)
 {
     CustomMessageHandler::installMessageHandler();
     initCCA();
@@ -11,36 +11,51 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
     initSSVEPWidget();
     initTaskWidget();
     initIndexWidget();
-//    connect(bcimonitor,&BCIMonitor::markChanged,cca,&CCA::start);
+    connect(bcimonitor,&BCIMonitor::markChanged,cca,&CCA::start);
     connect(bcimonitor,&BCIMonitor::filterData,this,[=](QList<double> data){
-        data=filter->filter(data);
-        cca->append(data);
-        bool isok=blink_recognition->recognition(data[0]);
-        if(isok&&bcimonitor->getRecvStatus())
+        std::vector<float> value(data.size());
+        for(int i=0;i<data.size();i++)
         {
-            blink_recognition->stop();
-            bcimonitor->connectHost();
-            QTimer::singleShot(1000,[=](){
-                ssvep_widget->display(1);
-                cca->start();
-            });
+            value[i]=data[i];
+        }
+        brain_recognition.append(value);
+        if(brain_recognition.readyData())
+        {
+            int id=brain_recognition.run();
+            qDebug()<<id;
+        }
+        bite_teeth_recognition.initBiteTeethThreshold(value);
+        bite_teeth_recognition.append(value);
+        if(bite_teeth_recognition.recognitionStatus())
+        {
+            if(bite_teeth_recognition.recognitionModel())
+            {
+                qDebug()<<bite_teeth_recognition.recogntionCommand();
+                bite_teeth_recognition.setRecognitionModel(false);
+            }
+            else
+            {
+                bool isok=bite_teeth_recognition.recogntion();
+                if(isok)
+                {
+                    qDebug()<<"咬牙成功";
+                }
+            }
         }
     });
     connect(cca,&CCA::result,controlfly,&ControlFly::command);
     connect(taskwidget,&start_game::start,this,[=](){
-//        bcimonitor->connectHost();
-//        QTimer::singleShot(1000,[=](){
-//            ssvep_widget->display(1);
-//            cca->start();
-//        });
+        brain_recognition.start();
+        bite_teeth_recognition.start();
         blink_recognition->start();
 
     });
     connect(taskwidget,&start_game::collection,this,[=](){
         QTimer::singleShot(1000,[=](){
-            ssvep_widget->display(2);
-            cca->start();
-            bcimonitor->startDataTransmit();
+//            ssvep_widget->display(2);
+//            cca->start();
+//            bcimonitor->startDataTransmit();
+              bite_teeth_recognition.setRecognitionModel(true);
         });
 
     });
@@ -94,7 +109,7 @@ BASSVEP::BASSVEP(QObject *parent) : QObject(parent)
         }
     });
     calculate_test.show();
-    ssvep_widget->start();
+//    ssvep_widget->start();
     connect(indexwidget,&IndexWidget::tabChanged,this,[=](int index){
         if(index==2)
         {

@@ -13,6 +13,8 @@
 #include "calculatetest.h"
 #include "authoritymanage.h"
 #include "blinkrecognition.h"
+#include "biteteethrecognition.h"
+#include "brainrecognition.h"
 class BASSVEP : public QObject
 {
     Q_OBJECT
@@ -58,7 +60,10 @@ private:
     //登录次数
     quint8 login_time=0;
 
-
+    //咬牙算法
+    Calculate::BiteTeethRecognition bite_teeth_recognition;
+    //脑纹识别算法
+    Calculate::DeepLearn::BrainRecognition brain_recognition;
 };
 
 #endif // BASSVEP_H

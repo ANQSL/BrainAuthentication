@@ -27,6 +27,7 @@ add_subdirectory(SSVEPWidget)
 add_subdirectory(CustomMessageHandler)
 add_subdirectory(CalculateTest)
 add_subdirectory(AuthorityManage)
+add_subdirectory(BCIIA)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 file(COPY ${CURVE_RES} DESTINATION "res")
@@ -35,12 +36,12 @@ file(COPY ${MATDLL} DESTINATION ".")
 #message("${MonitorRes}")
 # 添加数据库
 file(COPY ${sql} DESTINATION "sql")
-
+file(COPY ${onnxruntime_DLL} DESTINATION ".")
 file(GLOB SRC "src/*")
 
 add_executable(${PROJECT_NAME} WIN32 main.cpp ${SRC}  ${MonitorRes} ${AmpliferRes})
 target_link_libraries(${PROJECT_NAME}  Qt5::Widgets)
 target_link_libraries(${PROJECT_NAME}  BCIMonitor CCA  Blink DataProcess ControlFly SSVEPWidget
-                      CustomMessageHandler CalculateTest AuthorityManage)
+                      CustomMessageHandler CalculateTest AuthorityManage Calculate)
 
 target_include_directories(${PROJECT_NAME} PUBLIC src)

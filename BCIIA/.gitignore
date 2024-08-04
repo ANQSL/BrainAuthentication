@@ -1,0 +1,12 @@
+*.exe
+.vs/
+build/
+CMakeLists.txt.*
+*.rar
+build*/
+.idea/
+ssvep_data/
+release/
+*.mat
+SSVEP_FLY_4index/
+fear_data/
