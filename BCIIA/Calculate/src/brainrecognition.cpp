@@ -54,6 +54,18 @@ bool BrainRecognition::append(std::vector<float> data)
     }
 }
 
+bool Calculate::DeepLearn::BrainRecognition::readyData(int time_duration)
+{
+    if (this->time_duration == time_duration)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool BrainRecognition::readyData()
 {
     if(time_duration==5)
@@ -74,7 +86,7 @@ int64_t BrainRecognition::run(std::vector<float> value)
 {
     value=normlize(value);
     std::vector<BrainRecognition::MatchResult> match_results;
-    for(int i=0;i<5;i++)
+    for(int i=0;i<time_duration;i++)
     {
         std::vector<float> input_value=std::vector<float>(value.begin()+i*32*1000,value.begin()+(i+1)*32*1000);
         Base::run(input_value);
@@ -204,6 +216,8 @@ int64_t BrainRecognition::compute_identity(std::vector<BrainRecognition::MatchRe
     }
     if(count<30)
     {
+        std::cout << "id:" << identity_id;
+        std::cout.flush();
         return -1;
     }
     else

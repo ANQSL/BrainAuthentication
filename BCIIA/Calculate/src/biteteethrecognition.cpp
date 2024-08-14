@@ -139,11 +139,7 @@ unsigned int BiteTeethRecognition::recogntionCommand()
     unsigned int result3=recogntion(eeg3);
     eeg_cache.clear();
     recognition_status=false;
-    if(result1==1&&result2==1&&result3==1)
-    {
-        return 4;
-    }
-    return (result1<<1)+result3;
+    return (result1<<2)+(result2<<1)+result3;
 }
 
 bool BiteTeethRecognition::recognitionStatus()

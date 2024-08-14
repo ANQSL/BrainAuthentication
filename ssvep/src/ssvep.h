@@ -45,10 +45,6 @@ private:
     Communication *communication;
     void initCommunication();
 
-    QVector<QPixmap> frames;
-    void initFrames(quint8 type);
-    void initFrames();
-
     void start_display();
 
     //进程通信

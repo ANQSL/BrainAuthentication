@@ -19,7 +19,6 @@ SSVEP::SSVEP()
     initMarks();
     initCommunication();
     this->resize(1600,800);
-    initFrames();
     initReceiveCommandTask();
     connect(receivce_command_task,&ReceiveCommandTask::newCommand,this,&SSVEP::readCommand);
 }
@@ -324,35 +323,6 @@ void SSVEP::initCommunication()
 {
     communication=new Communication;
     connect(this,&SSVEP::markChanged,communication,&Communication::append);
-}
-
-void SSVEP::initFrames(quint8 type)
-{
-    frames.clear();
-    quint16 frame_num=((config.display_time/1000)+1)*60;
-    for(int i=0;i<frame_num;i++)
-    {
-        QPixmap pixmap(width(),height());
-        pixmap.fill(Qt::black);
-        QPainter painter(&pixmap);
-        display(painter,i,type);
-        frames.append(pixmap);
-    }
-}
-
-void SSVEP::initFrames()
-{
-    frames.clear();
-    quint16 frame_num=((config.display_time/1000))*60;
-    for(int i=0;i<frame_num;i++)
-    {
-        QPixmap pixmap(width(),height());
-        pixmap.fill(Qt::black);
-        QPainter painter(&pixmap);
-        display(painter,i);
-//        pixmap.save(QString("%1.jpg").arg(i+1));
-        frames.append(pixmap);
-    }
 }
 void SSVEP::start_display()
 {

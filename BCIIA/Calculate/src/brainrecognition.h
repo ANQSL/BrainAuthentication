@@ -9,6 +9,7 @@ public:
     BrainRecognition();
     ~BrainRecognition();
     bool append(std::vector<float>);
+    bool readyData(int);
     bool readyData();
     int64_t run();
     int64_t run(std::vector<float>);
