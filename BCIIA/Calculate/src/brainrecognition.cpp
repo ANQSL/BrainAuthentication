@@ -204,6 +204,8 @@ int64_t BrainRecognition::compute_identity(std::vector<BrainRecognition::MatchRe
     }
     if(count<30)
     {
+        std::cout << "id:" << identity_id;
+        std::cout.flush();
         return -1;
     }
     else

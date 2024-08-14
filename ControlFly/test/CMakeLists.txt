@@ -8,10 +8,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+include_directories("D:/C++/ffmpeg/include")
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
-
+file(COPY ${FFMPEGDLL} DESTINATION .)
 add_executable(ControlFly_test main.cpp)
 
 target_link_libraries(ControlFly_test PRIVATE Qt5::Core ControlFly)

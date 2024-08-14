@@ -2,61 +2,30 @@
 
 ControlFly::ControlFly(QObject *parent) : QObject(parent)
 {
-    server=new QTcpServer;
-    server->listen(QHostAddress::Any,6666);
-    setConnect();
+    communication=new FlyCommunication;
+    control_widget=new FlyControlWidget;
+    connect(communication,&FlyCommunication::receiveFrameFinished,control_widget,&FlyControlWidget::setVideoFrame);
+    connect(communication,&FlyCommunication::currentCommand,control_widget,&FlyControlWidget::setCurrentCommand);
+    connect(communication, &FlyCommunication::batteryChanged, control_widget, &FlyControlWidget::setBttery);
+    communication->initCommunication();
 }
-
 ControlFly::~ControlFly()
 {
-    delete server;
+    delete control_widget;
+    delete communication;
 }
 
-void ControlFly::command(quint8 index)
+void ControlFly::sendCommand(int command)
 {
-    if(socket!=NULL)
-    {
-        char data=index+48;
-        socket->write(&data,1);
-    }
+    communication->sendCommand(command);
 }
 
-bool ControlFly::connectStatus()
+void ControlFly::startControl()
 {
-    if(socket)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-void ControlFly::setConnect()
-{
-    connect(server,&QTcpServer::newConnection,this,[=](){
-       if(server->hasPendingConnections())
-       {
-           qDebug()<<"游戏端已连接";
-           socket=server->nextPendingConnection();
-           setSocketConnect();
-       }
-    });
+    control_widget->startControl();
 }
 
-void ControlFly::setSocketConnect()
+void ControlFly::showControlWidget()
 {
-    connect(socket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(socketDeal(QAbstractSocket::SocketError)));
+    control_widget->show();
 }
-
-void ControlFly::initTaskProcess()
-{
-    task_process=new QProcess;
-}
-
-void ControlFly::socketDeal(QAbstractSocket::SocketError socketError)
-{
-    socket=NULL;
-    qDebug()<<socketError;
-}
-

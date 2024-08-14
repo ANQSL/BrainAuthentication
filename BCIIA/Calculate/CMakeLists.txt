@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.5)
 project(Calculate LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -13,6 +10,7 @@ set(onnxruntime_DIR "D:\\C++\\onnxruntime\\build\\lib\\cmake\\onnxruntime")
 set(onnxruntime_DLL_DIR "D:\\C++\\onnxruntime\\build\\bin")
 
 file(GLOB onnxruntime_DLL ${onnxruntime_DLL_DIR}/*.dll)
+set(onnxruntime_DLL ${onnxruntime_DLL} CACHE PATH "dll of onnxruntime")
 file(COPY ${onnxruntime_DLL} DESTINATION .)
 find_package(onnxruntime REQUIRED)
 file(GLOB src "src/*")

@@ -45,6 +45,7 @@ endif()
 set(MATDLL ${MATDLL} CACHE PATH "path of TinyMat")
 add_library(MAT ${SRC})
 
+message("mat ${CMAKE_BUILD_TYPE}")
 target_link_libraries(MAT  Qt5::Core ${MATLIB})
 target_include_directories(MAT PUBLIC "src" ${MATINCLUDE})
 install(TARGETS ${PROJECT_NAME} ARCHIVE)

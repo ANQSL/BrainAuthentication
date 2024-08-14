@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
-add_executable(ssvep_test main.cpp)
+add_executable(ssvep_test WIN32 main.cpp)
 
 target_link_libraries(ssvep_test PRIVATE Qt5::Core Qt5::Widgets ssvep)
 

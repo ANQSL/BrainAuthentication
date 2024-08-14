@@ -2,28 +2,21 @@
 #define CONTROL_H
 
 #include <QObject>
-#include "QTcpServer"
-#include "QTcpSocket"
-#include "QProcess"
+#include "flycommunication.h"
+#include "flycontrolwidget.h"
 class ControlFly : public QObject
 {
     Q_OBJECT
 public:
     explicit ControlFly(QObject *parent = nullptr);
     ~ControlFly();
-    void command(quint8);
-    bool connectStatus();
+    void sendCommand(int);
+    void startControl();
+    void showControlWidget();
 signals:
 private:
-    QTcpServer *server;
-    QTcpSocket *socket=NULL;
-    void setConnect();
-    void setSocketConnect();
-    //任务进程
-    QProcess *task_process;
-    void initTaskProcess();
-private slots:
-    void socketDeal(QAbstractSocket::SocketError socketError);
+    FlyCommunication *communication;
+    FlyControlWidget *control_widget;
 };
 
 #endif // CONTROL_H
